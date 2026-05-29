@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Time To Cook</title>
+  <meta name="description" content="Take a fridge, freezer, or food photo and turn it into recipes with step-by-step cooking videos.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Time To Cook home">
+        <img src="assets/logo.svg" alt="Time To Cook logo">
+        <span>Time To Cook</span>
+      </a>
+      <a href="#scanner">Scan food</a>
+      <a href="#recipes">Recipes</a>
+      <a href="#video">Step videos</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Fridge-to-recipe assistant</p>
+        <h1>Take a picture of your food. Get a recipe and cooking steps.</h1>
+        <p class="lede">Upload or snap a fridge, freezer, pantry, or plate photo. Time To Cook helps identify ingredients, suggests matching recipes, and turns each recipe into a guided step-by-step video card.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#scanner">Start with a photo</a>
+          <a class="button secondary" href="#recipes">See recipe ideas</a>
+        </div>
+      </div>
+      <div class="phone-demo" aria-label="App preview">
+        <img src="assets/logo.svg" alt="Time To Cook app logo">
+        <div class="scan-frame"><span></span><strong>Ready to scan</strong></div>
+      </div>
+    </section>
+
+    <section id="scanner" class="scanner card">
+      <div>
+        <p class="eyebrow">Step 1</p>
+        <h2>Upload or take a picture</h2>
+        <p>For this prototype, choose a food photo and confirm the ingredients you see. The recipe engine works in your browser, so it is easy to connect to a computer-vision API later.</p>
+      </div>
+      <label class="upload-box" for="food-photo">
+        <input id="food-photo" type="file" accept="image/*" capture="environment">
+        <span class="upload-icon">📷</span>
+        <strong>Tap to add a fridge, freezer, or food photo</strong>
+        <small>JPG, PNG, or HEIC from your camera or gallery</small>
+      </label>
+      <div class="preview-wrap" hidden>
+        <img id="preview" alt="Uploaded food preview">
+        <button class="button secondary" id="remove-photo" type="button">Remove photo</button>
+      </div>
+    </section>
+
+    <section class="ingredients card">
+      <div>
+        <p class="eyebrow">Step 2</p>
+        <h2>Confirm detected foods</h2>
+        <p>Select what is in the photo or type anything missing. These ingredient chips drive the recipe matches.</p>
+      </div>
+      <div class="chip-panel" id="suggested-ingredients" aria-label="Suggested ingredients"></div>
+      <form id="ingredient-form" class="ingredient-form">
+        <label for="custom-ingredient">Add another ingredient</label>
+        <div>
+          <input id="custom-ingredient" type="text" placeholder="e.g., rice, eggs, frozen peas">
+          <button class="button primary" type="submit">Add</button>
+        </div>
+      </form>
+      <div>
+        <h3>Your ingredients</h3>
+        <div class="selected-list" id="selected-ingredients" aria-live="polite"></div>
+      </div>
+      <button class="button primary wide" id="find-recipes" type="button">Find recipes</button>
+    </section>
+
+    <section id="recipes" class="recipes">
+      <div class="section-heading">
+        <p class="eyebrow">Step 3</p>
+        <h2>Recipe matches</h2>
+        <p>Pick a recipe to see ingredients, instructions, and video-style steps.</p>
+      </div>
+      <div class="recipe-grid" id="recipe-results"></div>
+    </section>
+
+    <section id="video" class="video-section card">
+      <div class="video-copy">
+        <p class="eyebrow">Step 4</p>
+        <h2 id="video-title">Step-by-step video guide</h2>
+        <p id="video-summary">Choose a recipe and press “Watch steps” to generate a simple guided cooking video sequence.</p>
+      </div>
+      <div class="video-player" aria-live="polite">
+        <div class="video-screen" id="video-screen">
+          <span>▶</span>
+          <strong>Waiting for a recipe</strong>
+          <p>Your step video will appear here.</p>
+        </div>
+        <div class="video-controls">
+          <button class="button secondary" id="prev-step" type="button">Previous</button>
+          <button class="button primary" id="next-step" type="button">Next step</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Time To Cook helps reduce food waste by turning what you already have into meals.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
