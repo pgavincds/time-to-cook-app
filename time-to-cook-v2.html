@@ -1,0 +1,904 @@
+<!doctype html>
+<!-- Time to Cook V2 child-safe single-file browser app. Upload this file alongside the first version, or rename/copy it to index.html when ready to make V2 the GitHub Pages home page. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Time to Cook</title>
+  <meta name="description" content="A child-safe cooking assistant prototype for ingredient photos, recipe ideas, and step-by-step cooking help.">
+  <style>
+:root {
+  --cream: #fffaf4;
+  --ink: #263832;
+  --muted: #63746e;
+  --pink: #f0b1d0;
+  --coral: #f27f75;
+  --red: #f04d4e;
+  --yellow: #ffd735;
+  --mint: #dff4e7;
+  --blue: #dcecff;
+  --card: rgba(255, 255, 255, 0.9);
+  --shadow: 0 24px 70px rgba(80, 47, 68, 0.16);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(240, 177, 208, 0.35), transparent 34rem),
+    radial-gradient(circle at 85% 12%, rgba(255, 215, 53, 0.25), transparent 26rem),
+    linear-gradient(180deg, #fff 0%, var(--cream) 58%, #fff 100%);
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+  background: rgba(255, 250, 244, 0.9);
+  border-bottom: 1px solid rgba(240, 177, 208, 0.35);
+}
+.nav {
+  width: min(1120px, calc(100% - 28px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 0;
+  font-weight: 900;
+  color: var(--muted);
+}
+.brand {
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+.brand img { width: 48px; border-radius: 14px; box-shadow: 0 8px 22px rgba(240, 77, 78, 0.12); }
+
+.app-shell { width: min(1120px, calc(100% - 28px)); margin: 0 auto; }
+.screen { display: none; margin: 28px 0; }
+.screen.active { display: block; }
+.hero-screen.active {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) 390px;
+  align-items: center;
+  gap: 56px;
+  min-height: 690px;
+  padding: 40px 0;
+}
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--red);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1, h2, h3, p { margin-top: 0; }
+h1 { font-size: clamp(3.4rem, 9vw, 7rem); line-height: 0.9; letter-spacing: -0.07em; margin-bottom: 18px; }
+h2 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1; letter-spacing: -0.05em; margin-bottom: 14px; }
+h3 { margin-bottom: 12px; }
+.lede, footer p, .card p, .section-heading p {
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.button-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.button-row.center { justify-content: center; }
+.button {
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 48px;
+}
+.button:hover { transform: translateY(-2px); }
+.button:disabled { opacity: 0.7; cursor: wait; transform: none; }
+.primary { background: var(--red); color: #fff; box-shadow: 0 12px 26px rgba(240, 77, 78, 0.25); }
+.secondary { background: #fff; color: var(--ink); border: 1px solid rgba(99, 116, 110, 0.2); }
+.help { background: var(--yellow); color: var(--ink); }
+.wide { width: 100%; margin-top: 8px; }
+.jumbo { font-size: 1.2rem; padding: 18px 30px; }
+
+.phone-demo {
+  background: #fff;
+  border: 10px solid #263832;
+  border-radius: 44px;
+  padding: 26px;
+  min-height: 560px;
+  box-shadow: var(--shadow);
+  display: grid;
+  align-content: center;
+  gap: 24px;
+}
+.phone-demo img { border-radius: 28px; }
+.scan-frame {
+  min-height: 150px;
+  border: 2px dashed rgba(240, 77, 78, 0.45);
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(255, 215, 53, 0.18), rgba(240, 177, 208, 0.22));
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--red);
+}
+.scan-frame span { width: 58px; height: 58px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 10px var(--yellow); }
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(240, 177, 208, 0.32);
+  border-radius: 34px;
+  padding: clamp(22px, 4vw, 38px);
+  box-shadow: var(--shadow);
+}
+.safety-banner, .prototype-note, .warning-list p, .step-safety {
+  border-radius: 22px;
+  padding: 14px 16px;
+  background: #fff3d4;
+  border: 1px solid rgba(255, 180, 0, 0.4);
+  color: #6a4a00;
+  font-weight: 850;
+}
+.prototype-note { background: var(--blue); border-color: #b9d5ff; color: #28435f; }
+.small-note { color: var(--muted); font-size: 0.96rem; }
+
+.safety-form { display: grid; gap: 16px; }
+.safety-form fieldset {
+  border: 1px solid rgba(99, 116, 110, 0.2);
+  border-radius: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.74);
+}
+.safety-form legend, .allergy-field { font-weight: 950; margin-bottom: 10px; }
+.safety-form label { display: inline-flex; align-items: center; gap: 8px; margin-right: 18px; font-weight: 800; }
+.safety-form input[type="radio"] { width: 20px; height: 20px; }
+
+.upload-box {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  border: 2px dashed rgba(99, 116, 110, 0.28);
+  border-radius: 28px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.72);
+  margin-bottom: 16px;
+}
+.upload-box input { position: absolute; opacity: 0; pointer-events: none; }
+.upload-icon { font-size: 3rem; }
+.upload-box small { color: var(--muted); }
+.preview-wrap { display: grid; gap: 14px; margin-bottom: 16px; }
+.preview-wrap img { max-height: 360px; width: 100%; object-fit: cover; border-radius: 24px; }
+
+.chip-panel, .selected-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+.chip {
+  border: 1px solid rgba(99, 116, 110, 0.18);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  padding: 11px 15px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.chip.active, .selected-chip { background: var(--mint); border-color: #aed9bd; }
+.selected-chip::after { content: " ×"; color: var(--red); }
+.ingredient-form { margin: 22px 0; }
+.ingredient-form label { display: block; font-weight: 900; margin-bottom: 8px; }
+.ingredient-form div { display: flex; gap: 10px; }
+input[type="text"] {
+  width: 100%;
+  border: 1px solid rgba(99, 116, 110, 0.22);
+  border-radius: 999px;
+  padding: 14px 18px;
+  font: inherit;
+}
+
+.recipes { padding: 30px 0; }
+.section-heading { max-width: 740px; margin-bottom: 24px; }
+.recipe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.recipe-card {
+  background: #fff;
+  border-radius: 28px;
+  padding: 22px;
+  border: 1px solid rgba(240, 177, 208, 0.28);
+  box-shadow: 0 14px 38px rgba(80, 47, 68, 0.1);
+  display: grid;
+  gap: 14px;
+}
+.recipe-art {
+  min-height: 120px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--yellow), var(--coral));
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 3rem;
+}
+.recipe-meta { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-weight: 800; font-size: 0.9rem; }
+.recipe-card ul, #recipe-detail ul { padding-left: 20px; margin: 0; color: var(--muted); line-height: 1.55; }
+.safety-label {
+  border-radius: 999px;
+  padding: 9px 13px;
+  font-weight: 950;
+  width: fit-content;
+}
+.safety-label.adult { background: #ffe2df; color: #a32624; }
+.safety-label.ok { background: var(--mint); color: #1f6541; }
+.detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
+.detail-grid div { background: #fff; border-radius: 22px; padding: 14px; border: 1px solid rgba(99, 116, 110, 0.14); }
+.detail-grid p { margin-bottom: 0; }
+
+.cooking-mode { text-align: center; }
+.video-screen {
+  min-height: 330px;
+  border-radius: 30px;
+  background: linear-gradient(145deg, #263832, #465d55);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 28px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+  margin: 20px 0;
+}
+.video-screen span { font-size: 4rem; }
+.video-screen strong { font-size: clamp(1.7rem, 6vw, 3.5rem); line-height: 1.08; }
+.video-screen p { color: #fff; font-size: 1.1rem; }
+.success-screen { text-align: center; }
+.success-icon { font-size: 5rem; margin-bottom: 6px; }
+
+footer { text-align: center; padding: 36px 18px 50px; }
+
+@media (max-width: 840px) {
+  .nav a:not(.brand) { display: none; }
+  .hero-screen.active { grid-template-columns: 1fr; min-height: auto; padding: 28px 0; }
+  .phone-demo { min-height: auto; }
+  .recipe-grid, .detail-grid { grid-template-columns: 1fr; }
+  .ingredient-form div, .button-row { flex-direction: column; }
+  .button { width: 100%; }
+}
+
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#welcome" data-go="welcome" aria-label="Time to Cook home">
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22552%22%20height%3D%22552%22%20viewBox%3D%220%200%20552%20552%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-labelledby%3D%22title%20desc%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ETime%20To%20Cook%20logo%3C/title%3E%0A%20%20%3Cdesc%20id%3D%22desc%22%3EA%20pastel%20chef%20hat%2C%20Time%20To%20Cook%20lettering%2C%20and%20spoon%20mark.%3C/desc%3E%0A%20%20%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%22550%22%20height%3D%22550%22%20fill%3D%22white%22%20stroke%3D%22%238B5CF6%22%20stroke-width%3D%222%22/%3E%0A%20%20%3Cpath%20d%3D%22M243%20156c-18-9-43%204-40%2030%203%2022%2028%2033%2048%2023m79-1c20%2011%2045%200%2042-23-3-26-29-39-43-30-13-42-68-46-86%201%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20159c26-7%2057-10%2085%2013%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20207c6%2021%2012%2043%208%2061m67-61c-8%2021-10%2043-4%2061%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M262%20232c16-2%2035-1%2051%203m-38%2021c12-1%2025%200%2038%203%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22230%22%20font-family%3D%22Brush%20Script%20MT%2C%20Segoe%20Script%2C%20cursive%22%20text-anchor%3D%22middle%22%20font-size%3D%2262%22%20fill%3D%22%23F27F75%22%3ETime%20To%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22269%22%20font-family%3D%22Arial%20Black%2C%20Montserrat%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2250%22%20font-weight%3D%22900%22%20fill%3D%22%23FFD735%22%3ECOOK%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22296%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3EAN%20APP%20TO%20HELP%20YOU%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22326%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3ECOOK%3C/text%3E%0A%20%20%3Cpath%20d%3D%22M169%20358c45%207%2092-10%20122-27%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M245%20351c21%203%2040%203%2063-8%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M244%20390c8-18%2035-20%2048-7%2031-4%2056-16%2072-30%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cellipse%20cx%3D%22270%22%20cy%3D%22388%22%20rx%3D%2225%22%20ry%3D%2210%22%20fill%3D%22%23F04D4E%22%20transform%3D%22rotate%28-6%20270%20388%29%22/%3E%0A%20%20%3Ccircle%20cx%3D%22224%22%20cy%3D%22383%22%20r%3D%226%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%22361%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22241%22%20cy%3D%22412%22%20r%3D%223%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22319%22%20cy%3D%22347%22%20r%3D%222.5%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22407%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%0A%3C/svg%3E%0A" alt="Time to Cook logo">
+        <span>Time to Cook</span>
+      </a>
+      <a href="#safety" data-go="safety">Safety</a>
+      <a href="#ingredients" data-go="input">Ingredients</a>
+      <a href="#recipes" data-go="recipes">Recipes</a>
+    </nav>
+  </header>
+
+  <main id="top" class="app-shell">
+    <section id="welcome" class="screen hero-screen active" data-screen="welcome">
+      <div class="hero-copy">
+        <p class="eyebrow">Kid-safe cooking helper</p>
+        <h1>Time to Cook</h1>
+        <p class="lede">Let’s make something yummy and safe.</p>
+        <p class="safety-banner">Ask an adult before using heat, knives, or boiling water.</p>
+        <button class="button primary jumbo" type="button" data-go="safety">Let’s Start</button>
+      </div>
+      <div class="phone-demo" aria-label="App preview">
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22552%22%20height%3D%22552%22%20viewBox%3D%220%200%20552%20552%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-labelledby%3D%22title%20desc%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ETime%20To%20Cook%20logo%3C/title%3E%0A%20%20%3Cdesc%20id%3D%22desc%22%3EA%20pastel%20chef%20hat%2C%20Time%20To%20Cook%20lettering%2C%20and%20spoon%20mark.%3C/desc%3E%0A%20%20%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%22550%22%20height%3D%22550%22%20fill%3D%22white%22%20stroke%3D%22%238B5CF6%22%20stroke-width%3D%222%22/%3E%0A%20%20%3Cpath%20d%3D%22M243%20156c-18-9-43%204-40%2030%203%2022%2028%2033%2048%2023m79-1c20%2011%2045%200%2042-23-3-26-29-39-43-30-13-42-68-46-86%201%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20159c26-7%2057-10%2085%2013%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20207c6%2021%2012%2043%208%2061m67-61c-8%2021-10%2043-4%2061%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M262%20232c16-2%2035-1%2051%203m-38%2021c12-1%2025%200%2038%203%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22230%22%20font-family%3D%22Brush%20Script%20MT%2C%20Segoe%20Script%2C%20cursive%22%20text-anchor%3D%22middle%22%20font-size%3D%2262%22%20fill%3D%22%23F27F75%22%3ETime%20To%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22269%22%20font-family%3D%22Arial%20Black%2C%20Montserrat%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2250%22%20font-weight%3D%22900%22%20fill%3D%22%23FFD735%22%3ECOOK%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22296%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3EAN%20APP%20TO%20HELP%20YOU%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22326%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3ECOOK%3C/text%3E%0A%20%20%3Cpath%20d%3D%22M169%20358c45%207%2092-10%20122-27%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M245%20351c21%203%2040%203%2063-8%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M244%20390c8-18%2035-20%2048-7%2031-4%2056-16%2072-30%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cellipse%20cx%3D%22270%22%20cy%3D%22388%22%20rx%3D%2225%22%20ry%3D%2210%22%20fill%3D%22%23F04D4E%22%20transform%3D%22rotate%28-6%20270%20388%29%22/%3E%0A%20%20%3Ccircle%20cx%3D%22224%22%20cy%3D%22383%22%20r%3D%226%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%22361%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22241%22%20cy%3D%22412%22%20r%3D%223%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22319%22%20cy%3D%22347%22%20r%3D%222.5%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22407%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%0A%3C/svg%3E%0A" alt="Time to Cook app logo">
+        <div class="scan-frame"><span></span><strong>Ready for safe cooking</strong></div>
+      </div>
+    </section>
+
+    <section id="safety" class="screen card" data-screen="safety">
+      <p class="eyebrow">Step 1</p>
+      <h2>Safety setup</h2>
+      <p class="lede">Tell Time to Cook what tools are safe for you today. This helps label recipes that need adult help.</p>
+      <form id="safety-form" class="safety-form">
+        <fieldset>
+          <legend>Can you use the stove?</legend>
+          <label><input type="radio" name="stove" value="yes"> Yes</label>
+          <label><input type="radio" name="stove" value="no" checked> No</label>
+        </fieldset>
+        <fieldset>
+          <legend>Can you use the microwave?</legend>
+          <label><input type="radio" name="microwave" value="yes"> Yes</label>
+          <label><input type="radio" name="microwave" value="no" checked> No</label>
+        </fieldset>
+        <fieldset>
+          <legend>Can you use a knife?</legend>
+          <label><input type="radio" name="knife" value="yes"> Yes</label>
+          <label><input type="radio" name="knife" value="no" checked> No</label>
+        </fieldset>
+        <fieldset>
+          <legend>Is an adult nearby?</legend>
+          <label><input type="radio" name="adult" value="yes" checked> Yes</label>
+          <label><input type="radio" name="adult" value="no"> No</label>
+        </fieldset>
+        <label class="allergy-field" for="allergies">Do you have any food allergies?</label>
+        <input id="allergies" name="allergies" type="text" placeholder="e.g., peanuts, milk, eggs, none">
+        <p class="safety-banner">Always check ingredients with an adult if you have allergies. This prototype cannot guarantee allergen safety.</p>
+        <div class="button-row">
+          <button class="button secondary" type="button" data-go="welcome">Back</button>
+          <button class="button primary" type="submit">Save Safety Setup</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="ingredients" class="screen card" data-screen="input">
+      <p class="eyebrow">Step 2</p>
+      <h2>What ingredients do you have?</h2>
+      <p class="lede">Upload or select a food photo. Prototype mode: ingredient detection is simulated.</p>
+      <label class="upload-box" for="food-photo">
+        <input id="food-photo" type="file" accept="image/*" capture="environment">
+        <span class="upload-icon">📷</span>
+        <strong>Tap to add a fridge, pantry, or food photo</strong>
+        <small>JPG, PNG, or HEIC from your camera or gallery</small>
+      </label>
+      <div class="preview-wrap" hidden>
+        <img id="preview" alt="Uploaded food preview">
+        <button class="button secondary" id="remove-photo" type="button">Remove photo</button>
+      </div>
+      <p class="prototype-note">Prototype mode: ingredient detection is simulated. You can still use the demo chips below if you do not upload a photo.</p>
+      <button class="button primary wide" id="analyze-ingredients" type="button">Analyze Ingredients</button>
+      <div class="button-row">
+        <button class="button secondary" type="button" data-go="safety">Back</button>
+      </div>
+    </section>
+
+    <section id="review" class="screen card" data-screen="review">
+      <p class="eyebrow">Step 3</p>
+      <h2>Review your ingredients</h2>
+      <p>You can edit the ingredient list before choosing a recipe. Check this list with an adult, especially if you have allergies.</p>
+      <div id="analysis-warnings" class="warning-list" aria-live="polite"></div>
+      <h3>Detected ingredients</h3>
+      <div class="selected-list" id="selected-ingredients" aria-live="polite"></div>
+      <form id="ingredient-form" class="ingredient-form">
+        <label for="custom-ingredient">Add another ingredient</label>
+        <div>
+          <input id="custom-ingredient" type="text" placeholder="e.g., apple, bread, yogurt">
+          <button class="button primary" type="submit">Add</button>
+        </div>
+      </form>
+      <h3>Demo ingredient chips</h3>
+      <p class="small-note">Fallback/demo mode: tap chips to add or remove ingredients without a backend.</p>
+      <div class="chip-panel" id="suggested-ingredients" aria-label="Suggested ingredients"></div>
+      <div class="button-row">
+        <button class="button secondary" type="button" data-go="input">Back</button>
+        <button class="button primary" id="find-recipes" type="button">Find Recipes</button>
+      </div>
+    </section>
+
+    <section id="recipes" class="screen recipes" data-screen="recipes">
+      <div class="section-heading">
+        <p class="eyebrow">Step 4</p>
+        <h2>Recipe suggestions</h2>
+        <p>Recipes are ranked from your ingredients and safety answers. Ask an adult before using heat, knives, or boiling water.</p>
+      </div>
+      <div class="recipe-grid" id="recipe-results"></div>
+      <div class="button-row">
+        <button class="button secondary" type="button" data-go="review">Back</button>
+      </div>
+    </section>
+
+    <section id="recipe-detail" class="screen card" data-screen="detail">
+      <div id="recipe-detail-content"></div>
+      <div class="button-row">
+        <button class="button secondary" type="button" data-go="recipes">Back to Recipes</button>
+        <button class="button primary" id="start-cooking" type="button">Start Cooking</button>
+      </div>
+    </section>
+
+    <section id="cooking" class="screen card cooking-mode" data-screen="cooking">
+      <p class="eyebrow" id="step-progress">Step 1 of 1</p>
+      <h2 id="cooking-title">Cooking mode</h2>
+      <div class="video-screen" id="step-card" aria-live="polite"></div>
+      <div class="button-row">
+        <button class="button secondary" id="back-step" type="button">Back</button>
+        <button class="button help" id="need-help" type="button">I need help</button>
+        <button class="button primary" id="next-step" type="button">Next Step</button>
+      </div>
+    </section>
+
+    <section id="finished" class="screen card success-screen" data-screen="finished">
+      <p class="success-icon">🎉</p>
+      <h2>You did it! Great job cooking safely.</h2>
+      <p id="saved-message" class="small-note" aria-live="polite"></p>
+      <div class="button-row center">
+        <button class="button secondary" id="make-another" type="button">Make another recipe</button>
+        <button class="button primary" id="save-recipe" type="button">Save this recipe</button>
+        <button class="button secondary" type="button" data-go="welcome">Done</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Time to Cook helps kids cook with safer steps, adult reminders, and editable ingredient lists.</p>
+  </footer>
+
+  <script>
+/**
+ * Mock/backend-ready ingredient analysis service for Time to Cook.
+ *
+ * Expected future endpoint:
+ *   POST /api/analyze-ingredients
+ *   multipart/form-data: { image: File }
+ *
+ * API keys and AI model calls must stay on the backend. The frontend should only
+ * send the image to the server and receive safe structured JSON like the shapes
+ * documented below.
+ *
+ * @typedef {Object} Ingredient
+ * @property {string} id
+ * @property {string} name
+ * @property {string} category
+ * @property {number=} confidence
+ *
+ * @typedef {Object} IngredientAnalysisResult
+ * @property {Ingredient[]} detectedIngredients
+ * @property {string[]} warnings
+ * @property {string[]} suggestedRecipes
+ */
+
+const mockDetectedIngredients = [
+  { id: "pasta", name: "pasta", category: "grain", confidence: 0.92 },
+  { id: "cheese", name: "cheese", category: "dairy", confidence: 0.89 },
+  { id: "milk", name: "milk", category: "dairy", confidence: 0.83 },
+  { id: "butter", name: "butter", category: "dairy", confidence: 0.78 }
+];
+
+/**
+ * Analyze an ingredient image.
+ *
+ * Prototype mode returns mock data so the full app can be tested without a
+ * backend. Replace the timeout block with a fetch('/api/analyze-ingredients')
+ * call when the backend is ready.
+ *
+ * @param {File|null} imageFile
+ * @returns {Promise<IngredientAnalysisResult>}
+ */
+async function analyzeIngredientImage(imageFile) {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  return {
+    detectedIngredients: mockDetectedIngredients,
+    warnings: [
+      "Prototype mode: ingredient detection is simulated.",
+      imageFile ? `Demo analysis used the uploaded file name: ${imageFile.name}` : "No photo was required for this demo analysis."
+    ],
+    suggestedRecipes: ["mac-and-cheese", "cheese-sandwich", "fruit-smoothie"]
+  };
+}
+
+window.TimeToCookServices = {
+  analyzeIngredientImage,
+  mockDetectedIngredients
+};
+
+
+/**
+ * Time to Cook front-end prototype.
+ *
+ * Data shapes used by the app and expected from a future backend:
+ *
+ * @typedef {Object} RecipeSuggestion
+ * @property {string} id
+ * @property {string} title
+ * @property {string} estimatedTime
+ * @property {string} difficulty
+ * @property {string[]} requiredTools
+ * @property {boolean} adultHelpRequired
+ * @property {string[]} safetyNotes
+ * @property {string[]=} missingIngredients
+ *
+ * @typedef {Object} CookingStep
+ * @property {string} id
+ * @property {string} instruction
+ * @property {string=} safetyNote
+ *
+ * @typedef {Object} Recipe
+ * @property {string} id
+ * @property {string} title
+ * @property {string[]} ingredients
+ * @property {string[]} tools
+ * @property {string} estimatedTime
+ * @property {string} difficulty
+ * @property {boolean} adultHelpRequired
+ * @property {string[]} safetyNotes
+ * @property {CookingStep[]} steps
+ */
+
+const analysisService = window.TimeToCookServices.analyzeIngredientImage;
+
+const demoIngredients = [
+  "pasta", "cheese", "milk", "butter", "bread", "apple", "banana", "berries",
+  "yogurt", "peanut butter", "jelly", "tomato", "lettuce", "eggs", "rice", "carrots"
+];
+
+/** @type {Recipe[]} */
+const recipes = [
+  {
+    id: "mac-and-cheese",
+    title: "Mac and Cheese",
+    emoji: "🧀",
+    ingredients: ["pasta", "cheese", "milk", "butter"],
+    tools: ["stove", "pot", "strainer", "spoon"],
+    estimatedTime: "20 min",
+    difficulty: "Medium",
+    adultHelpRequired: true,
+    safetyNotes: [
+      "Uses boiling water and a hot stove.",
+      "Ask an adult to help boil and drain the pasta.",
+      "Check dairy ingredients with an adult if you have allergies."
+    ],
+    steps: [
+      { id: "mac-1", instruction: "Ask an adult to help boil water.", safetyNote: "Boiling water and steam can burn you." },
+      { id: "mac-2", instruction: "Add pasta carefully.", safetyNote: "Let the adult pour or help with the hot pot." },
+      { id: "mac-3", instruction: "Stir pasta while it cooks.", safetyNote: "Keep hands away from steam." },
+      { id: "mac-4", instruction: "Drain with adult help.", safetyNote: "This step needs adult help because the pot is hot and heavy." },
+      { id: "mac-5", instruction: "Add cheese, milk, and butter.", safetyNote: "Check ingredients with an adult if you have allergies." },
+      { id: "mac-6", instruction: "Stir and enjoy." }
+    ]
+  },
+  {
+    id: "fruit-smoothie",
+    title: "Fruit Smoothie",
+    emoji: "🍓",
+    ingredients: ["banana", "berries", "yogurt", "milk"],
+    tools: ["blender", "cup"],
+    estimatedTime: "8 min",
+    difficulty: "Easy",
+    adultHelpRequired: false,
+    safetyNotes: [
+      "Ask an adult before using a blender.",
+      "Check yogurt and milk with an adult if you have allergies."
+    ],
+    steps: [
+      { id: "smoothie-1", instruction: "Put fruit, yogurt, and a splash of milk in the blender cup." },
+      { id: "smoothie-2", instruction: "Ask an adult to check the blender lid is tight.", safetyNote: "Blender blades are sharp." },
+      { id: "smoothie-3", instruction: "Blend until smooth." },
+      { id: "smoothie-4", instruction: "Pour into a cup and enjoy." }
+    ]
+  },
+  {
+    id: "cheese-sandwich",
+    title: "Cheese Sandwich",
+    emoji: "🥪",
+    ingredients: ["bread", "cheese", "butter"],
+    tools: ["plate", "butter knife"],
+    estimatedTime: "10 min",
+    difficulty: "Easy",
+    adultHelpRequired: false,
+    safetyNotes: [
+      "Use a safe butter knife only if an adult says it is okay.",
+      "Check bread, dairy, and spreads with an adult if you have allergies."
+    ],
+    steps: [
+      { id: "sandwich-1", instruction: "Place two slices of bread on a plate." },
+      { id: "sandwich-2", instruction: "Add cheese between the bread slices." },
+      { id: "sandwich-3", instruction: "Spread a little butter if you want.", safetyNote: "Only use a safe butter knife if an adult says it is okay." },
+      { id: "sandwich-4", instruction: "Cut or fold the sandwich with adult help if needed." },
+      { id: "sandwich-5", instruction: "Enjoy your sandwich." }
+    ]
+  }
+];
+
+const state = {
+  currentScreen: "welcome",
+  imageFile: null,
+  selectedIngredients: new Set(),
+  analysisWarnings: ["Prototype mode: ingredient detection is simulated."],
+  safety: {
+    stove: false,
+    microwave: false,
+    knife: false,
+    adultNearby: true,
+    allergies: ""
+  },
+  activeRecipe: null,
+  stepIndex: 0,
+  savedRecipes: []
+};
+
+const screens = document.querySelectorAll(".screen");
+const ingredientPanel = document.querySelector("#suggested-ingredients");
+const selectedPanel = document.querySelector("#selected-ingredients");
+const recipeResults = document.querySelector("#recipe-results");
+const fileInput = document.querySelector("#food-photo");
+const previewWrap = document.querySelector(".preview-wrap");
+const previewImage = document.querySelector("#preview");
+const uploadBox = document.querySelector(".upload-box");
+
+function normalize(value) {
+  return value.trim().toLowerCase();
+}
+
+function showScreen(screenName) {
+  state.currentScreen = screenName;
+  screens.forEach((screen) => screen.classList.toggle("active", screen.dataset.screen === screenName));
+  document.querySelector(`[data-screen="${screenName}"]`).scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function collectSafetySetup() {
+  const form = document.querySelector("#safety-form");
+  const data = new FormData(form);
+  state.safety = {
+    stove: data.get("stove") === "yes",
+    microwave: data.get("microwave") === "yes",
+    knife: data.get("knife") === "yes",
+    adultNearby: data.get("adult") === "yes",
+    allergies: normalize(data.get("allergies") || "")
+  };
+}
+
+function toggleIngredient(ingredient) {
+  if (state.selectedIngredients.has(ingredient)) state.selectedIngredients.delete(ingredient);
+  else state.selectedIngredients.add(ingredient);
+  renderIngredients();
+}
+
+function removeIngredient(ingredient) {
+  state.selectedIngredients.delete(ingredient);
+  renderIngredients();
+}
+
+function renderIngredients() {
+  ingredientPanel.innerHTML = demoIngredients.map((ingredient) => `
+    <button class="chip ${state.selectedIngredients.has(ingredient) ? "active" : ""}" type="button" data-ingredient="${ingredient}">${ingredient}</button>
+  `).join("");
+
+  selectedPanel.innerHTML = state.selectedIngredients.size
+    ? [...state.selectedIngredients].map((ingredient) => `<button class="chip selected-chip" type="button" data-remove="${ingredient}" aria-label="Remove ${ingredient}">${ingredient}</button>`).join("")
+    : `<p>No ingredients yet. Analyze a photo, tap demo chips, or add your own.</p>`;
+
+  document.querySelector("#analysis-warnings").innerHTML = state.analysisWarnings
+    .map((warning) => `<p>⚠️ ${warning}</p>`)
+    .join("");
+}
+
+async function runMockAnalysis() {
+  const button = document.querySelector("#analyze-ingredients");
+  button.textContent = "Analyzing...";
+  button.disabled = true;
+
+  const result = await analysisService(state.imageFile);
+  result.detectedIngredients.forEach((ingredient) => state.selectedIngredients.add(ingredient.name));
+  state.analysisWarnings = [
+    ...result.warnings,
+    "You can edit the ingredient list before choosing a recipe.",
+    "Always check ingredients with an adult if you have allergies."
+  ];
+
+  button.textContent = "Analyze Ingredients";
+  button.disabled = false;
+  renderIngredients();
+  showScreen("review");
+}
+
+function getRecipeSafety(recipe) {
+  const notes = [...recipe.safetyNotes];
+  let needsAdult = recipe.adultHelpRequired;
+
+  if (recipe.tools.includes("stove") && !state.safety.stove) {
+    needsAdult = true;
+    notes.push("You said you cannot use the stove, so this needs adult help.");
+  }
+  if (recipe.tools.some((tool) => tool.includes("knife")) && !state.safety.knife) {
+    needsAdult = true;
+    notes.push("You said you cannot use a knife, so ask an adult for this part.");
+  }
+  if (!state.safety.adultNearby && needsAdult) {
+    notes.push("An adult is not nearby. Pick a no-heat recipe or wait for help.");
+  }
+  if (state.safety.allergies) {
+    notes.push(`Allergy reminder: you entered “${state.safety.allergies}.” An adult must check every ingredient label. This prototype cannot guarantee allergen safety.`);
+  }
+
+  return { needsAdult, notes: [...new Set(notes)] };
+}
+
+function scoreRecipe(recipe) {
+  const matches = recipe.ingredients.filter((item) => state.selectedIngredients.has(item));
+  const missingIngredients = recipe.ingredients.filter((item) => !state.selectedIngredients.has(item));
+  return {
+    recipe,
+    matches,
+    missingIngredients,
+    score: matches.length / recipe.ingredients.length
+  };
+}
+
+function renderRecipes() {
+  const ranked = recipes
+    .map(scoreRecipe)
+    .sort((a, b) => b.matches.length - a.matches.length || a.missingIngredients.length - b.missingIngredients.length);
+
+  recipeResults.innerHTML = ranked.map(({ recipe, matches, missingIngredients }) => {
+    const safety = getRecipeSafety(recipe);
+    const safetyLabel = safety.needsAdult ? "Needs adult help" : "Kid-friendly with adult check";
+    return `
+      <article class="recipe-card">
+        <div class="recipe-art" aria-hidden="true">${recipe.emoji}</div>
+        <div>
+          <h3>${recipe.title}</h3>
+          <p>${matches.length} matching ingredient${matches.length === 1 ? "" : "s"}. ${missingIngredients.length ? `Missing: ${missingIngredients.join(", ")}.` : "You have all listed ingredients."}</p>
+        </div>
+        <div class="recipe-meta">
+          <span>⏱ ${recipe.estimatedTime}</span>
+          <span>⭐ ${recipe.difficulty}</span>
+          <span>🧰 ${recipe.tools.join(", ")}</span>
+        </div>
+        <p class="safety-label ${safety.needsAdult ? "adult" : "ok"}">${safetyLabel}</p>
+        <ul>${safety.notes.slice(0, 3).map((note) => `<li>${note}</li>`).join("")}</ul>
+        <button class="button primary" type="button" data-pick="${recipe.id}">Pick This</button>
+      </article>
+    `;
+  }).join("");
+}
+
+function setActiveRecipe(recipeId) {
+  state.activeRecipe = recipes.find((recipe) => recipe.id === recipeId);
+  state.stepIndex = 0;
+  renderRecipeDetail();
+  showScreen("detail");
+}
+
+function renderRecipeDetail() {
+  const recipe = state.activeRecipe;
+  if (!recipe) return;
+  const safety = getRecipeSafety(recipe);
+  document.querySelector("#recipe-detail-content").innerHTML = `
+    <p class="eyebrow">Recipe detail</p>
+    <h2>${recipe.emoji} ${recipe.title}</h2>
+    <div class="detail-grid">
+      <div><strong>Time</strong><p>${recipe.estimatedTime}</p></div>
+      <div><strong>Difficulty</strong><p>${recipe.difficulty}</p></div>
+      <div><strong>Tools</strong><p>${recipe.tools.join(", ")}</p></div>
+    </div>
+    <p class="safety-label ${safety.needsAdult ? "adult" : "ok"}">${safety.needsAdult ? "Adult help required" : "Adult check recommended"}</p>
+    <h3>Ingredients</h3>
+    <ul>${recipe.ingredients.map((item) => `<li>${item}</li>`).join("")}</ul>
+    <h3>Safety reminders</h3>
+    <ul>${safety.notes.map((note) => `<li>${note}</li>`).join("")}</ul>
+  `;
+}
+
+function renderCookingStep() {
+  const recipe = state.activeRecipe;
+  if (!recipe) return;
+  const step = recipe.steps[state.stepIndex];
+  document.querySelector("#cooking-title").textContent = recipe.title;
+  document.querySelector("#step-progress").textContent = `Step ${state.stepIndex + 1} of ${recipe.steps.length}`;
+  document.querySelector("#step-card").innerHTML = `
+    <span>${recipe.emoji}</span>
+    <strong>${step.instruction}</strong>
+    ${step.safetyNote ? `<p class="step-safety">Safety: ${step.safetyNote}</p>` : ""}
+  `;
+  document.querySelector("#back-step").textContent = state.stepIndex === 0 ? "Recipe Detail" : "Back";
+  document.querySelector("#next-step").textContent = state.stepIndex === recipe.steps.length - 1 ? "Finish" : "Next Step";
+}
+
+function resetForAnotherRecipe() {
+  state.activeRecipe = null;
+  state.stepIndex = 0;
+  document.querySelector("#saved-message").textContent = "";
+  showScreen("recipes");
+}
+
+document.body.addEventListener("click", (event) => {
+  const goButton = event.target.closest("[data-go]");
+  if (goButton) showScreen(goButton.dataset.go);
+});
+
+document.querySelector("#safety-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  collectSafetySetup();
+  showScreen("input");
+});
+
+document.querySelector("#analyze-ingredients").addEventListener("click", runMockAnalysis);
+
+ingredientPanel.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-ingredient]");
+  if (button) toggleIngredient(button.dataset.ingredient);
+});
+
+selectedPanel.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-remove]");
+  if (button) removeIngredient(button.dataset.remove);
+});
+
+document.querySelector("#ingredient-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const input = document.querySelector("#custom-ingredient");
+  const ingredient = normalize(input.value);
+  if (!ingredient) return;
+  state.selectedIngredients.add(ingredient);
+  input.value = "";
+  renderIngredients();
+});
+
+document.querySelector("#find-recipes").addEventListener("click", () => {
+  renderRecipes();
+  showScreen("recipes");
+});
+
+recipeResults.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-pick]");
+  if (button) setActiveRecipe(button.dataset.pick);
+});
+
+document.querySelector("#start-cooking").addEventListener("click", () => {
+  renderCookingStep();
+  showScreen("cooking");
+});
+
+document.querySelector("#next-step").addEventListener("click", () => {
+  if (!state.activeRecipe) return;
+  if (state.stepIndex === state.activeRecipe.steps.length - 1) {
+    showScreen("finished");
+    return;
+  }
+  state.stepIndex += 1;
+  renderCookingStep();
+});
+
+document.querySelector("#back-step").addEventListener("click", () => {
+  if (!state.activeRecipe || state.stepIndex === 0) {
+    showScreen("detail");
+    return;
+  }
+  state.stepIndex -= 1;
+  renderCookingStep();
+});
+
+document.querySelector("#need-help").addEventListener("click", () => {
+  alert("Pause cooking and ask an adult for help before continuing.");
+});
+
+document.querySelector("#make-another").addEventListener("click", resetForAnotherRecipe);
+
+document.querySelector("#save-recipe").addEventListener("click", () => {
+  if (state.activeRecipe && !state.savedRecipes.includes(state.activeRecipe.id)) {
+    state.savedRecipes.push(state.activeRecipe.id);
+  }
+  document.querySelector("#saved-message").textContent = "Saved for demo mode on this page. Real accounts and persistence can be added later.";
+});
+
+fileInput.addEventListener("change", () => {
+  const [file] = fileInput.files;
+  if (!file) return;
+  state.imageFile = file;
+  previewImage.src = URL.createObjectURL(file);
+  previewWrap.hidden = false;
+  uploadBox.hidden = true;
+});
+
+document.querySelector("#remove-photo").addEventListener("click", () => {
+  state.imageFile = null;
+  fileInput.value = "";
+  previewImage.removeAttribute("src");
+  previewWrap.hidden = true;
+  uploadBox.hidden = false;
+});
+
+renderIngredients();
+renderRecipes();
+showScreen("welcome");
+
+  </script>
+</body>
+</html>
