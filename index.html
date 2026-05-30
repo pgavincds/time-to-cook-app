@@ -1,0 +1,574 @@
+<!doctype html>
+<!-- Time To Cook single-file browser app. Upload this file as index.html to GitHub Pages, or open it locally in a browser. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Time To Cook</title>
+  <meta name="description" content="Take a fridge, freezer, or food photo and turn it into recipes with step-by-step cooking videos.">
+  <style>
+:root {
+  --cream: #fffaf4;
+  --ink: #263832;
+  --muted: #63746e;
+  --pink: #f0b1d0;
+  --coral: #f27f75;
+  --red: #f04d4e;
+  --yellow: #ffd735;
+  --mint: #dff4e7;
+  --card: rgba(255, 255, 255, 0.86);
+  --shadow: 0 24px 70px rgba(80, 47, 68, 0.16);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(240, 177, 208, 0.35), transparent 34rem),
+    radial-gradient(circle at 85% 12%, rgba(255, 215, 53, 0.25), transparent 26rem),
+    linear-gradient(180deg, #fff 0%, var(--cream) 58%, #fff 100%);
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+  background: rgba(255, 250, 244, 0.84);
+  border-bottom: 1px solid rgba(240, 177, 208, 0.35);
+}
+.nav {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 12px 0;
+  font-weight: 800;
+  color: var(--muted);
+}
+.brand {
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+.brand img { width: 48px; border-radius: 14px; box-shadow: 0 8px 22px rgba(240, 77, 78, 0.12); }
+
+main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) 390px;
+  align-items: center;
+  gap: 56px;
+  min-height: 690px;
+  padding: 56px 0;
+}
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--red);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1, h2, h3, p { margin-top: 0; }
+h1 { font-size: clamp(2.7rem, 7vw, 5.8rem); line-height: 0.94; letter-spacing: -0.07em; margin-bottom: 22px; }
+h2 { font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1; letter-spacing: -0.05em; margin-bottom: 14px; }
+h3 { margin-bottom: 12px; }
+.lede, .section-heading p, .scanner p, .ingredients p, .video-copy p, footer p {
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+.button {
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 20px;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.button:hover { transform: translateY(-2px); }
+.primary { background: var(--red); color: #fff; box-shadow: 0 12px 26px rgba(240, 77, 78, 0.25); }
+.secondary { background: #fff; color: var(--ink); border: 1px solid rgba(99, 116, 110, 0.2); }
+.wide { width: 100%; margin-top: 8px; }
+
+.phone-demo {
+  background: #fff;
+  border: 10px solid #263832;
+  border-radius: 44px;
+  padding: 26px;
+  min-height: 590px;
+  box-shadow: var(--shadow);
+  display: grid;
+  align-content: center;
+  gap: 24px;
+}
+.phone-demo img { border-radius: 28px; }
+.scan-frame {
+  min-height: 150px;
+  border: 2px dashed rgba(240, 77, 78, 0.45);
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(255, 215, 53, 0.18), rgba(240, 177, 208, 0.22));
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--red);
+}
+.scan-frame span { width: 58px; height: 58px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 10px var(--yellow); }
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(240, 177, 208, 0.32);
+  border-radius: 34px;
+  padding: clamp(22px, 4vw, 38px);
+  box-shadow: var(--shadow);
+  margin-bottom: 26px;
+}
+.scanner, .ingredients, .video-section { display: grid; gap: 24px; }
+.upload-box {
+  display: grid;
+  place-items: center;
+  min-height: 250px;
+  border: 2px dashed rgba(99, 116, 110, 0.28);
+  border-radius: 28px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.72);
+}
+.upload-box input { position: absolute; opacity: 0; pointer-events: none; }
+.upload-icon { font-size: 3rem; }
+.upload-box small { color: var(--muted); }
+.preview-wrap { display: grid; gap: 14px; }
+.preview-wrap img { max-height: 360px; width: 100%; object-fit: cover; border-radius: 24px; }
+
+.chip-panel, .selected-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  border: 1px solid rgba(99, 116, 110, 0.18);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 14px;
+  font-weight: 850;
+  cursor: pointer;
+}
+.chip.active, .selected-list .chip { background: var(--mint); border-color: #aed9bd; }
+.selected-list .chip::after { content: " ×"; color: var(--red); }
+.ingredient-form label { display: block; font-weight: 900; margin-bottom: 8px; }
+.ingredient-form div { display: flex; gap: 10px; }
+input[type="text"] {
+  width: 100%;
+  border: 1px solid rgba(99, 116, 110, 0.22);
+  border-radius: 999px;
+  padding: 14px 18px;
+  font: inherit;
+}
+
+.recipes { padding: 56px 0 26px; }
+.section-heading { max-width: 690px; margin-bottom: 24px; }
+.recipe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.recipe-card {
+  background: #fff;
+  border-radius: 28px;
+  padding: 22px;
+  border: 1px solid rgba(240, 177, 208, 0.28);
+  box-shadow: 0 14px 38px rgba(80, 47, 68, 0.1);
+  display: grid;
+  gap: 14px;
+}
+.recipe-art {
+  min-height: 130px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--yellow), var(--coral));
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 3rem;
+}
+.recipe-meta { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-weight: 800; font-size: 0.9rem; }
+.recipe-card ul, .recipe-card ol { padding-left: 20px; margin: 0; color: var(--muted); line-height: 1.55; }
+
+.video-section { grid-template-columns: 0.85fr 1.15fr; align-items: center; margin: 38px 0 50px; }
+.video-screen {
+  min-height: 330px;
+  border-radius: 30px;
+  background: linear-gradient(140deg, #263832, #4a6058);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 30px;
+}
+.video-screen span { font-size: 3rem; color: var(--yellow); }
+.video-screen p { margin-bottom: 0; color: rgba(255,255,255,0.76); }
+.video-controls { display: flex; gap: 12px; margin-top: 14px; justify-content: flex-end; }
+
+footer { text-align: center; padding: 30px 16px 54px; }
+
+@media (max-width: 880px) {
+  .nav a:not(.brand) { display: none; }
+  .hero, .video-section { grid-template-columns: 1fr; min-height: auto; }
+  .phone-demo { min-height: auto; }
+  .recipe-grid { grid-template-columns: 1fr; }
+}
+
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Time To Cook home">
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22552%22%20height%3D%22552%22%20viewBox%3D%220%200%20552%20552%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-labelledby%3D%22title%20desc%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ETime%20To%20Cook%20logo%3C/title%3E%0A%20%20%3Cdesc%20id%3D%22desc%22%3EA%20pastel%20chef%20hat%2C%20Time%20To%20Cook%20lettering%2C%20and%20spoon%20mark.%3C/desc%3E%0A%20%20%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%22550%22%20height%3D%22550%22%20fill%3D%22white%22%20stroke%3D%22%238B5CF6%22%20stroke-width%3D%222%22/%3E%0A%20%20%3Cpath%20d%3D%22M243%20156c-18-9-43%204-40%2030%203%2022%2028%2033%2048%2023m79-1c20%2011%2045%200%2042-23-3-26-29-39-43-30-13-42-68-46-86%201%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20159c26-7%2057-10%2085%2013%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20207c6%2021%2012%2043%208%2061m67-61c-8%2021-10%2043-4%2061%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M262%20232c16-2%2035-1%2051%203m-38%2021c12-1%2025%200%2038%203%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22230%22%20font-family%3D%22Brush%20Script%20MT%2C%20Segoe%20Script%2C%20cursive%22%20text-anchor%3D%22middle%22%20font-size%3D%2262%22%20fill%3D%22%23F27F75%22%3ETime%20To%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22269%22%20font-family%3D%22Arial%20Black%2C%20Montserrat%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2250%22%20font-weight%3D%22900%22%20fill%3D%22%23FFD735%22%3ECOOK%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22296%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3EAN%20APP%20TO%20HELP%20YOU%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22326%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3ECOOK%3C/text%3E%0A%20%20%3Cpath%20d%3D%22M169%20358c45%207%2092-10%20122-27%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M245%20351c21%203%2040%203%2063-8%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M244%20390c8-18%2035-20%2048-7%2031-4%2056-16%2072-30%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cellipse%20cx%3D%22270%22%20cy%3D%22388%22%20rx%3D%2225%22%20ry%3D%2210%22%20fill%3D%22%23F04D4E%22%20transform%3D%22rotate%28-6%20270%20388%29%22/%3E%0A%20%20%3Ccircle%20cx%3D%22224%22%20cy%3D%22383%22%20r%3D%226%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%22361%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22241%22%20cy%3D%22412%22%20r%3D%223%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22319%22%20cy%3D%22347%22%20r%3D%222.5%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22407%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%0A%3C/svg%3E%0A" alt="Time To Cook logo">
+        <span>Time To Cook</span>
+      </a>
+      <a href="#scanner">Scan food</a>
+      <a href="#recipes">Recipes</a>
+      <a href="#video">Step videos</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Fridge-to-recipe assistant</p>
+        <h1>Take a picture of your food. Get a recipe and cooking steps.</h1>
+        <p class="lede">Upload or snap a fridge, freezer, pantry, or plate photo. Time To Cook helps identify ingredients, suggests matching recipes, and turns each recipe into a guided step-by-step video card.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#scanner">Start with a photo</a>
+          <a class="button secondary" href="#recipes">See recipe ideas</a>
+        </div>
+      </div>
+      <div class="phone-demo" aria-label="App preview">
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22552%22%20height%3D%22552%22%20viewBox%3D%220%200%20552%20552%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-labelledby%3D%22title%20desc%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ETime%20To%20Cook%20logo%3C/title%3E%0A%20%20%3Cdesc%20id%3D%22desc%22%3EA%20pastel%20chef%20hat%2C%20Time%20To%20Cook%20lettering%2C%20and%20spoon%20mark.%3C/desc%3E%0A%20%20%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%22550%22%20height%3D%22550%22%20fill%3D%22white%22%20stroke%3D%22%238B5CF6%22%20stroke-width%3D%222%22/%3E%0A%20%20%3Cpath%20d%3D%22M243%20156c-18-9-43%204-40%2030%203%2022%2028%2033%2048%2023m79-1c20%2011%2045%200%2042-23-3-26-29-39-43-30-13-42-68-46-86%201%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20159c26-7%2057-10%2085%2013%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20207c6%2021%2012%2043%208%2061m67-61c-8%2021-10%2043-4%2061%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M262%20232c16-2%2035-1%2051%203m-38%2021c12-1%2025%200%2038%203%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22230%22%20font-family%3D%22Brush%20Script%20MT%2C%20Segoe%20Script%2C%20cursive%22%20text-anchor%3D%22middle%22%20font-size%3D%2262%22%20fill%3D%22%23F27F75%22%3ETime%20To%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22269%22%20font-family%3D%22Arial%20Black%2C%20Montserrat%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2250%22%20font-weight%3D%22900%22%20fill%3D%22%23FFD735%22%3ECOOK%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22296%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3EAN%20APP%20TO%20HELP%20YOU%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22326%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3ECOOK%3C/text%3E%0A%20%20%3Cpath%20d%3D%22M169%20358c45%207%2092-10%20122-27%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M245%20351c21%203%2040%203%2063-8%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M244%20390c8-18%2035-20%2048-7%2031-4%2056-16%2072-30%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cellipse%20cx%3D%22270%22%20cy%3D%22388%22%20rx%3D%2225%22%20ry%3D%2210%22%20fill%3D%22%23F04D4E%22%20transform%3D%22rotate%28-6%20270%20388%29%22/%3E%0A%20%20%3Ccircle%20cx%3D%22224%22%20cy%3D%22383%22%20r%3D%226%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%22361%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22241%22%20cy%3D%22412%22%20r%3D%223%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22319%22%20cy%3D%22347%22%20r%3D%222.5%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22407%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%0A%3C/svg%3E%0A" alt="Time To Cook app logo">
+        <div class="scan-frame"><span></span><strong>Ready to scan</strong></div>
+      </div>
+    </section>
+
+    <section id="scanner" class="scanner card">
+      <div>
+        <p class="eyebrow">Step 1</p>
+        <h2>Upload or take a picture</h2>
+        <p>For this prototype, choose a food photo and confirm the ingredients you see. The recipe engine works in your browser, so it is easy to connect to a computer-vision API later.</p>
+      </div>
+      <label class="upload-box" for="food-photo">
+        <input id="food-photo" type="file" accept="image/*" capture="environment">
+        <span class="upload-icon">📷</span>
+        <strong>Tap to add a fridge, freezer, or food photo</strong>
+        <small>JPG, PNG, or HEIC from your camera or gallery</small>
+      </label>
+      <div class="preview-wrap" hidden>
+        <img id="preview" alt="Uploaded food preview">
+        <button class="button secondary" id="remove-photo" type="button">Remove photo</button>
+      </div>
+    </section>
+
+    <section class="ingredients card">
+      <div>
+        <p class="eyebrow">Step 2</p>
+        <h2>Confirm detected foods</h2>
+        <p>Select what is in the photo or type anything missing. These ingredient chips drive the recipe matches.</p>
+      </div>
+      <div class="chip-panel" id="suggested-ingredients" aria-label="Suggested ingredients"></div>
+      <form id="ingredient-form" class="ingredient-form">
+        <label for="custom-ingredient">Add another ingredient</label>
+        <div>
+          <input id="custom-ingredient" type="text" placeholder="e.g., rice, eggs, frozen peas">
+          <button class="button primary" type="submit">Add</button>
+        </div>
+      </form>
+      <div>
+        <h3>Your ingredients</h3>
+        <div class="selected-list" id="selected-ingredients" aria-live="polite"></div>
+      </div>
+      <button class="button primary wide" id="find-recipes" type="button">Find recipes</button>
+    </section>
+
+    <section id="recipes" class="recipes">
+      <div class="section-heading">
+        <p class="eyebrow">Step 3</p>
+        <h2>Recipe matches</h2>
+        <p>Pick a recipe to see ingredients, instructions, and video-style steps.</p>
+      </div>
+      <div class="recipe-grid" id="recipe-results"></div>
+    </section>
+
+    <section id="video" class="video-section card">
+      <div class="video-copy">
+        <p class="eyebrow">Step 4</p>
+        <h2 id="video-title">Step-by-step video guide</h2>
+        <p id="video-summary">Choose a recipe and press “Watch steps” to generate a simple guided cooking video sequence.</p>
+      </div>
+      <div class="video-player" aria-live="polite">
+        <div class="video-screen" id="video-screen">
+          <span>▶</span>
+          <strong>Waiting for a recipe</strong>
+          <p>Your step video will appear here.</p>
+        </div>
+        <div class="video-controls">
+          <button class="button secondary" id="prev-step" type="button">Previous</button>
+          <button class="button primary" id="next-step" type="button">Next step</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Time To Cook helps reduce food waste by turning what you already have into meals.</p>
+  </footer>
+
+  <script>
+const suggestedIngredients = [
+  "chicken", "ground beef", "eggs", "milk", "cheese", "yogurt", "rice", "pasta",
+  "bread", "potatoes", "tomatoes", "spinach", "broccoli", "carrots", "onion", "garlic",
+  "bell pepper", "frozen peas", "beans", "tortillas", "salmon", "tofu"
+];
+
+const recipes = [
+  {
+    name: "Creamy Fridge Pasta Bake",
+    emoji: "🍝",
+    time: "30 min",
+    level: "Easy",
+    ingredients: ["pasta", "cheese", "milk", "broccoli", "chicken", "onion", "garlic"],
+    summary: "A cozy pasta bake that uses leftover dairy, vegetables, and cooked meat.",
+    steps: [
+      "Boil pasta until just tender and save half a cup of pasta water.",
+      "Sauté onion, garlic, broccoli, and chicken until hot and fragrant.",
+      "Stir in milk, cheese, and pasta water to make a quick creamy sauce.",
+      "Fold in pasta, top with more cheese, and broil until golden."
+    ]
+  },
+  {
+    name: "Freezer Fried Rice",
+    emoji: "🍚",
+    time: "20 min",
+    level: "Beginner",
+    ingredients: ["rice", "eggs", "frozen peas", "carrots", "onion", "garlic", "chicken", "tofu"],
+    summary: "Turns leftover rice and freezer vegetables into a fast dinner.",
+    steps: [
+      "Scramble eggs in a hot skillet, then remove them to a plate.",
+      "Cook onion, garlic, carrots, and frozen peas until tender.",
+      "Add cold rice and press it into the pan so it lightly crisps.",
+      "Return eggs and protein, season to taste, and serve hot."
+    ]
+  },
+  {
+    name: "Loaded Breakfast Tacos",
+    emoji: "🌮",
+    time: "15 min",
+    level: "Easy",
+    ingredients: ["tortillas", "eggs", "cheese", "tomatoes", "spinach", "bell pepper", "beans"],
+    summary: "A flexible breakfast-for-dinner idea for eggs, vegetables, and tortillas.",
+    steps: [
+      "Warm tortillas in a dry pan and keep them covered.",
+      "Cook bell pepper, spinach, tomatoes, or beans until warm.",
+      "Scramble eggs gently with cheese until soft and creamy.",
+      "Fill tortillas, add toppings, and fold into tacos."
+    ]
+  },
+  {
+    name: "One-Pan Chicken Potato Skillet",
+    emoji: "🍗",
+    time: "35 min",
+    level: "Simple",
+    ingredients: ["chicken", "potatoes", "carrots", "onion", "garlic", "broccoli"],
+    summary: "A hearty skillet meal for chicken and sturdy fridge vegetables.",
+    steps: [
+      "Dice potatoes and carrots small so they cook quickly.",
+      "Brown chicken pieces in a large skillet, then set aside.",
+      "Cook potatoes, carrots, onion, and garlic until tender.",
+      "Return chicken, cover briefly, and finish with herbs or lemon."
+    ]
+  },
+  {
+    name: "Tomato Bean Soup",
+    emoji: "🍲",
+    time: "25 min",
+    level: "Easy",
+    ingredients: ["tomatoes", "beans", "onion", "garlic", "carrots", "spinach", "bread"],
+    summary: "A pantry-friendly soup that welcomes soft vegetables and canned beans.",
+    steps: [
+      "Sauté onion, garlic, and carrots until sweet and softened.",
+      "Add tomatoes, beans, and water or broth, then simmer.",
+      "Stir in spinach at the end so it stays bright.",
+      "Serve with toasted bread or a cheese topping."
+    ]
+  },
+  {
+    name: "Salmon Veggie Rice Bowl",
+    emoji: "🐟",
+    time: "25 min",
+    level: "Medium",
+    ingredients: ["salmon", "rice", "broccoli", "carrots", "spinach", "bell pepper"],
+    summary: "A balanced bowl for fish, grains, and crisp vegetables.",
+    steps: [
+      "Season salmon and roast or pan-sear until flaky.",
+      "Warm rice while steaming or sautéing the vegetables.",
+      "Build bowls with rice, vegetables, and salmon pieces.",
+      "Finish with yogurt sauce, soy glaze, or lemon."
+    ]
+  }
+];
+
+const state = { selected: new Set(["eggs", "cheese", "rice"]), activeRecipe: null, stepIndex: 0 };
+
+const ingredientPanel = document.querySelector("#suggested-ingredients");
+const selectedPanel = document.querySelector("#selected-ingredients");
+const recipeResults = document.querySelector("#recipe-results");
+const fileInput = document.querySelector("#food-photo");
+const previewWrap = document.querySelector(".preview-wrap");
+const previewImage = document.querySelector("#preview");
+const uploadBox = document.querySelector(".upload-box");
+
+function normalize(value) {
+  return value.trim().toLowerCase();
+}
+
+function toggleIngredient(ingredient) {
+  if (state.selected.has(ingredient)) state.selected.delete(ingredient);
+  else state.selected.add(ingredient);
+  renderIngredients();
+}
+
+function renderIngredients() {
+  ingredientPanel.innerHTML = suggestedIngredients.map((ingredient) => `
+    <button class="chip ${state.selected.has(ingredient) ? "active" : ""}" type="button" data-ingredient="${ingredient}">${ingredient}</button>
+  `).join("");
+
+  selectedPanel.innerHTML = [...state.selected].length
+    ? [...state.selected].map((ingredient) => `<button class="chip" type="button" data-selected="${ingredient}" aria-label="Remove ${ingredient}">${ingredient}</button>`).join("")
+    : `<p>No ingredients selected yet.</p>`;
+}
+
+function scoreRecipe(recipe) {
+  const matches = recipe.ingredients.filter((item) => state.selected.has(item));
+  return { recipe, matches, score: matches.length / recipe.ingredients.length };
+}
+
+function renderRecipes() {
+  const ranked = recipes
+    .map(scoreRecipe)
+    .sort((a, b) => b.matches.length - a.matches.length || b.score - a.score);
+
+  recipeResults.innerHTML = ranked.map(({ recipe, matches }) => `
+    <article class="recipe-card">
+      <div class="recipe-art" aria-hidden="true">${recipe.emoji}</div>
+      <div>
+        <h3>${recipe.name}</h3>
+        <p>${recipe.summary}</p>
+      </div>
+      <div class="recipe-meta"><span>⏱ ${recipe.time}</span><span>⭐ ${recipe.level}</span><span>✅ ${matches.length} match${matches.length === 1 ? "" : "es"}</span></div>
+      <strong>Uses:</strong>
+      <ul>${recipe.ingredients.slice(0, 6).map((item) => `<li>${item}</li>`).join("")}</ul>
+      <button class="button primary" type="button" data-watch="${recipe.name}">Watch steps</button>
+    </article>
+  `).join("");
+}
+
+function setActiveRecipe(recipeName) {
+  state.activeRecipe = recipes.find((recipe) => recipe.name === recipeName);
+  state.stepIndex = 0;
+  renderVideoStep();
+  document.querySelector("#video").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function renderVideoStep() {
+  const screen = document.querySelector("#video-screen");
+  const title = document.querySelector("#video-title");
+  const summary = document.querySelector("#video-summary");
+
+  if (!state.activeRecipe) return;
+
+  const step = state.activeRecipe.steps[state.stepIndex];
+  title.textContent = `${state.activeRecipe.name} video guide`;
+  summary.textContent = `Step ${state.stepIndex + 1} of ${state.activeRecipe.steps.length}: follow along at your own pace.`;
+  screen.innerHTML = `
+    <span>${state.activeRecipe.emoji}</span>
+    <strong>Step ${state.stepIndex + 1}</strong>
+    <p>${step}</p>
+  `;
+}
+
+ingredientPanel.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-ingredient]");
+  if (button) toggleIngredient(button.dataset.ingredient);
+});
+
+selectedPanel.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-selected]");
+  if (button) toggleIngredient(button.dataset.selected);
+});
+
+document.querySelector("#ingredient-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const input = document.querySelector("#custom-ingredient");
+  const ingredient = normalize(input.value);
+  if (!ingredient) return;
+  state.selected.add(ingredient);
+  input.value = "";
+  renderIngredients();
+});
+
+document.querySelector("#find-recipes").addEventListener("click", () => {
+  renderRecipes();
+  document.querySelector("#recipes").scrollIntoView({ behavior: "smooth" });
+});
+
+recipeResults.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-watch]");
+  if (button) setActiveRecipe(button.dataset.watch);
+});
+
+document.querySelector("#next-step").addEventListener("click", () => {
+  if (!state.activeRecipe) return;
+  state.stepIndex = (state.stepIndex + 1) % state.activeRecipe.steps.length;
+  renderVideoStep();
+});
+
+document.querySelector("#prev-step").addEventListener("click", () => {
+  if (!state.activeRecipe) return;
+  state.stepIndex = (state.stepIndex - 1 + state.activeRecipe.steps.length) % state.activeRecipe.steps.length;
+  renderVideoStep();
+});
+
+fileInput.addEventListener("change", () => {
+  const [file] = fileInput.files;
+  if (!file) return;
+  previewImage.src = URL.createObjectURL(file);
+  previewWrap.hidden = false;
+  uploadBox.hidden = true;
+
+  const filenameHints = normalize(file.name).split(/[^a-z]+/).filter(Boolean);
+  suggestedIngredients.forEach((ingredient) => {
+    const parts = ingredient.split(" ");
+    if (parts.some((part) => filenameHints.includes(part))) state.selected.add(ingredient);
+  });
+  renderIngredients();
+});
+
+document.querySelector("#remove-photo").addEventListener("click", () => {
+  fileInput.value = "";
+  previewImage.removeAttribute("src");
+  previewWrap.hidden = true;
+  uploadBox.hidden = false;
+});
+
+renderIngredients();
+renderRecipes();
+
+  </script>
+</body>
+</html>
