@@ -1,5 +1,4 @@
 <!doctype html>
-<!-- Time to Cook V2 child-safe single-file browser app. Upload this file alongside the first version, or rename/copy it to index.html when ready to make V2 the GitHub Pages home page. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -272,14 +271,60 @@ footer { text-align: center; padding: 36px 18px 50px; }
   .ingredient-form div, .button-row { flex-direction: column; }
   .button { width: 100%; }
 }
+.play-badge {
+  border: 1px solid rgba(255,255,255,0.38);
+  border-radius: 999px;
+  padding: 8px 13px;
+  background: rgba(255,255,255,0.12);
+  font-weight: 950;
+  width: fit-content;
+  justify-self: center;
+}
+select {
+  width: 100%;
+  border: 1px solid rgba(99, 116, 110, 0.22);
+  border-radius: 999px;
+  padding: 14px 18px;
+  font: inherit;
+  background: #fff;
+}
+.ingredient-card {
+  display: grid;
+  gap: 8px;
+  min-width: min(100%, 240px);
+  border: 1px solid rgba(99, 116, 110, 0.16);
+  border-radius: 22px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.86);
+}
+.ingredient-card label {
+  display: grid;
+  gap: 6px;
+  font-weight: 950;
+}
+.ingredient-card input {
+  border-radius: 16px;
+}
+.ingredient-card small {
+  color: var(--muted);
+  font-weight: 800;
+}
+.confidence-pill {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 950;
+}
 
-  </style>
+</style>
 </head>
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Primary navigation">
       <a class="brand" href="#welcome" data-go="welcome" aria-label="Time to Cook home">
-        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22552%22%20height%3D%22552%22%20viewBox%3D%220%200%20552%20552%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-labelledby%3D%22title%20desc%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ETime%20To%20Cook%20logo%3C/title%3E%0A%20%20%3Cdesc%20id%3D%22desc%22%3EA%20pastel%20chef%20hat%2C%20Time%20To%20Cook%20lettering%2C%20and%20spoon%20mark.%3C/desc%3E%0A%20%20%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%22550%22%20height%3D%22550%22%20fill%3D%22white%22%20stroke%3D%22%238B5CF6%22%20stroke-width%3D%222%22/%3E%0A%20%20%3Cpath%20d%3D%22M243%20156c-18-9-43%204-40%2030%203%2022%2028%2033%2048%2023m79-1c20%2011%2045%200%2042-23-3-26-29-39-43-30-13-42-68-46-86%201%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20159c26-7%2057-10%2085%2013%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20207c6%2021%2012%2043%208%2061m67-61c-8%2021-10%2043-4%2061%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M262%20232c16-2%2035-1%2051%203m-38%2021c12-1%2025%200%2038%203%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22230%22%20font-family%3D%22Brush%20Script%20MT%2C%20Segoe%20Script%2C%20cursive%22%20text-anchor%3D%22middle%22%20font-size%3D%2262%22%20fill%3D%22%23F27F75%22%3ETime%20To%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22269%22%20font-family%3D%22Arial%20Black%2C%20Montserrat%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2250%22%20font-weight%3D%22900%22%20fill%3D%22%23FFD735%22%3ECOOK%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22296%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3EAN%20APP%20TO%20HELP%20YOU%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22326%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3ECOOK%3C/text%3E%0A%20%20%3Cpath%20d%3D%22M169%20358c45%207%2092-10%20122-27%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M245%20351c21%203%2040%203%2063-8%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M244%20390c8-18%2035-20%2048-7%2031-4%2056-16%2072-30%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cellipse%20cx%3D%22270%22%20cy%3D%22388%22%20rx%3D%2225%22%20ry%3D%2210%22%20fill%3D%22%23F04D4E%22%20transform%3D%22rotate%28-6%20270%20388%29%22/%3E%0A%20%20%3Ccircle%20cx%3D%22224%22%20cy%3D%22383%22%20r%3D%226%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%22361%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22241%22%20cy%3D%22412%22%20r%3D%223%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22319%22%20cy%3D%22347%22%20r%3D%222.5%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22407%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%0A%3C/svg%3E%0A" alt="Time to Cook logo">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTUyIiBoZWlnaHQ9IjU1MiIgdmlld0JveD0iMCAwIDU1MiA1NTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsbGVkYnk9InRpdGxlIGRlc2MiPgogIDx0aXRsZSBpZD0idGl0bGUiPlRpbWUgVG8gQ29vayBsb2dvPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBwYXN0ZWwgY2hlZiBoYXQsIFRpbWUgVG8gQ29vayBsZXR0ZXJpbmcsIGFuZCBzcG9vbiBtYXJrLjwvZGVzYz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iNTUwIiBoZWlnaHQ9IjU1MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzhCNUNGNiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTI0MyAxNTZjLTE4LTktNDMgNC00MCAzMCAzIDIyIDI4IDMzIDQ4IDIzbTc5LTFjMjAgMTEgNDUgMCA0Mi0yMy0zLTI2LTI5LTM5LTQzLTMwLTEzLTQyLTY4LTQ2LTg2IDEiIHN0cm9rZT0iI0YwQjFEMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMjQ2IDE1OWMyNi03IDU3LTEwIDg1IDEzIiBzdHJva2U9IiNGMEIxRDAiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTI0NiAyMDdjNiAyMSAxMiA0MyA4IDYxbTY3LTYxYy04IDIxLTEwIDQzLTQgNjEiIHN0cm9rZT0iI0YwQjFEMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMjYyIDIzMmMxNi0yIDM1LTEgNTEgM20tMzggMjFjMTItMSAyNSAwIDM4IDMiIHN0cm9rZT0iI0YwQjFEMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8dGV4dCB4PSIyNzYiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkJydXNoIFNjcmlwdCBNVCwgU2Vnb2UgU2NyaXB0LCBjdXJzaXZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjYyIiBmaWxsPSIjRjI3Rjc1Ij5UaW1lIFRvPC90ZXh0PgogIDx0ZXh0IHg9IjI3NiIgeT0iMjY5IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIE1vbnRzZXJyYXQsIHNhbnMtc2VyaWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iNTAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkQ3MzUiPkNPT0s8L3RleHQ+CiAgPHRleHQgeD0iMjc2IiB5PSIyOTYiIGZvbnQtZmFtaWx5PSJNb250c2VycmF0LCBBcmlhbCwgc2Fucy1zZXJpZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjgwMCIgbGV0dGVyLXNwYWNpbmc9IjEiIGZpbGw9IiM1RDcwNjkiPkFOIEFQUCBUTyBIRUxQIFlPVTwvdGV4dD4KICA8dGV4dCB4PSIyNzYiIHk9IjMyNiIgZm9udC1mYW1pbHk9Ik1vbnRzZXJyYXQsIEFyaWFsLCBzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iODAwIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iIzVENzA2OSI+Q09PSzwvdGV4dD4KICA8cGF0aCBkPSJNMTY5IDM1OGM0NSA3IDkyLTEwIDEyMi0yNyIgc3Ryb2tlPSIjRjA0RDRFIiBzdHJva2Utd2lkdGg9IjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yNDUgMzUxYzIxIDMgNDAgMyA2My04IiBzdHJva2U9IiNGMDRENEUiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTI0NCAzOTBjOC0xOCAzNS0yMCA0OC03IDMxLTQgNTYtMTYgNzItMzAiIHN0cm9rZT0iI0YwNEQ0RSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8ZWxsaXBzZSBjeD0iMjcwIiBjeT0iMzg4IiByeD0iMjUiIHJ5PSIxMCIgZmlsbD0iI0YwNEQ0RSIgdHJhbnNmb3JtPSJyb3RhdGUoLTYgMjcwIDM4OCkiLz4KICA8Y2lyY2xlIGN4PSIyMjQiIGN5PSIzODMiIHI9IjYiIGZpbGw9IiNFQkE2RDIiLz48Y2lyY2xlIGN4PSIyOTgiIGN5PSIzNjEiIHI9IjQiIGZpbGw9IiNFQkE2RDIiLz48Y2lyY2xlIGN4PSIyNDEiIGN5PSI0MTIiIHI9IjMiIGZpbGw9IiNFQkE2RDIiLz48Y2lyY2xlIGN4PSIzMTkiIGN5PSIzNDciIHI9IjIuNSIgZmlsbD0iI0VCQTZEMiIvPjxjaXJjbGUgY3g9IjMxMCIgY3k9IjQwNyIgcj0iNCIgZmlsbD0iI0VCQTZEMiIvPgo8L3N2Zz4K" alt="Time to Cook logo">
         <span>Time to Cook</span>
       </a>
       <a href="#safety" data-go="safety">Safety</a>
@@ -298,7 +343,7 @@ footer { text-align: center; padding: 36px 18px 50px; }
         <button class="button primary jumbo" type="button" data-go="safety">Let’s Start</button>
       </div>
       <div class="phone-demo" aria-label="App preview">
-        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22552%22%20height%3D%22552%22%20viewBox%3D%220%200%20552%20552%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20role%3D%22img%22%20aria-labelledby%3D%22title%20desc%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ETime%20To%20Cook%20logo%3C/title%3E%0A%20%20%3Cdesc%20id%3D%22desc%22%3EA%20pastel%20chef%20hat%2C%20Time%20To%20Cook%20lettering%2C%20and%20spoon%20mark.%3C/desc%3E%0A%20%20%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%22550%22%20height%3D%22550%22%20fill%3D%22white%22%20stroke%3D%22%238B5CF6%22%20stroke-width%3D%222%22/%3E%0A%20%20%3Cpath%20d%3D%22M243%20156c-18-9-43%204-40%2030%203%2022%2028%2033%2048%2023m79-1c20%2011%2045%200%2042-23-3-26-29-39-43-30-13-42-68-46-86%201%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20159c26-7%2057-10%2085%2013%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M246%20207c6%2021%2012%2043%208%2061m67-61c-8%2021-10%2043-4%2061%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M262%20232c16-2%2035-1%2051%203m-38%2021c12-1%2025%200%2038%203%22%20stroke%3D%22%23F0B1D0%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22230%22%20font-family%3D%22Brush%20Script%20MT%2C%20Segoe%20Script%2C%20cursive%22%20text-anchor%3D%22middle%22%20font-size%3D%2262%22%20fill%3D%22%23F27F75%22%3ETime%20To%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22269%22%20font-family%3D%22Arial%20Black%2C%20Montserrat%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2250%22%20font-weight%3D%22900%22%20fill%3D%22%23FFD735%22%3ECOOK%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22296%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3EAN%20APP%20TO%20HELP%20YOU%3C/text%3E%0A%20%20%3Ctext%20x%3D%22276%22%20y%3D%22326%22%20font-family%3D%22Montserrat%2C%20Arial%2C%20sans-serif%22%20text-anchor%3D%22middle%22%20font-size%3D%2218%22%20font-weight%3D%22800%22%20letter-spacing%3D%221%22%20fill%3D%22%235D7069%22%3ECOOK%3C/text%3E%0A%20%20%3Cpath%20d%3D%22M169%20358c45%207%2092-10%20122-27%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M245%20351c21%203%2040%203%2063-8%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M244%20390c8-18%2035-20%2048-7%2031-4%2056-16%2072-30%22%20stroke%3D%22%23F04D4E%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cellipse%20cx%3D%22270%22%20cy%3D%22388%22%20rx%3D%2225%22%20ry%3D%2210%22%20fill%3D%22%23F04D4E%22%20transform%3D%22rotate%28-6%20270%20388%29%22/%3E%0A%20%20%3Ccircle%20cx%3D%22224%22%20cy%3D%22383%22%20r%3D%226%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%22361%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22241%22%20cy%3D%22412%22%20r%3D%223%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22319%22%20cy%3D%22347%22%20r%3D%222.5%22%20fill%3D%22%23EBA6D2%22/%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22407%22%20r%3D%224%22%20fill%3D%22%23EBA6D2%22/%3E%0A%3C/svg%3E%0A" alt="Time to Cook app logo">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTUyIiBoZWlnaHQ9IjU1MiIgdmlld0JveD0iMCAwIDU1MiA1NTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsbGVkYnk9InRpdGxlIGRlc2MiPgogIDx0aXRsZSBpZD0idGl0bGUiPlRpbWUgVG8gQ29vayBsb2dvPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBwYXN0ZWwgY2hlZiBoYXQsIFRpbWUgVG8gQ29vayBsZXR0ZXJpbmcsIGFuZCBzcG9vbiBtYXJrLjwvZGVzYz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iNTUwIiBoZWlnaHQ9IjU1MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzhCNUNGNiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTI0MyAxNTZjLTE4LTktNDMgNC00MCAzMCAzIDIyIDI4IDMzIDQ4IDIzbTc5LTFjMjAgMTEgNDUgMCA0Mi0yMy0zLTI2LTI5LTM5LTQzLTMwLTEzLTQyLTY4LTQ2LTg2IDEiIHN0cm9rZT0iI0YwQjFEMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMjQ2IDE1OWMyNi03IDU3LTEwIDg1IDEzIiBzdHJva2U9IiNGMEIxRDAiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTI0NiAyMDdjNiAyMSAxMiA0MyA4IDYxbTY3LTYxYy04IDIxLTEwIDQzLTQgNjEiIHN0cm9rZT0iI0YwQjFEMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMjYyIDIzMmMxNi0yIDM1LTEgNTEgM20tMzggMjFjMTItMSAyNSAwIDM4IDMiIHN0cm9rZT0iI0YwQjFEMCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8dGV4dCB4PSIyNzYiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkJydXNoIFNjcmlwdCBNVCwgU2Vnb2UgU2NyaXB0LCBjdXJzaXZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjYyIiBmaWxsPSIjRjI3Rjc1Ij5UaW1lIFRvPC90ZXh0PgogIDx0ZXh0IHg9IjI3NiIgeT0iMjY5IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIE1vbnRzZXJyYXQsIHNhbnMtc2VyaWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iNTAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGRkQ3MzUiPkNPT0s8L3RleHQ+CiAgPHRleHQgeD0iMjc2IiB5PSIyOTYiIGZvbnQtZmFtaWx5PSJNb250c2VycmF0LCBBcmlhbCwgc2Fucy1zZXJpZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjgwMCIgbGV0dGVyLXNwYWNpbmc9IjEiIGZpbGw9IiM1RDcwNjkiPkFOIEFQUCBUTyBIRUxQIFlPVTwvdGV4dD4KICA8dGV4dCB4PSIyNzYiIHk9IjMyNiIgZm9udC1mYW1pbHk9Ik1vbnRzZXJyYXQsIEFyaWFsLCBzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iODAwIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iIzVENzA2OSI+Q09PSzwvdGV4dD4KICA8cGF0aCBkPSJNMTY5IDM1OGM0NSA3IDkyLTEwIDEyMi0yNyIgc3Ryb2tlPSIjRjA0RDRFIiBzdHJva2Utd2lkdGg9IjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yNDUgMzUxYzIxIDMgNDAgMyA2My04IiBzdHJva2U9IiNGMDRENEUiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTI0NCAzOTBjOC0xOCAzNS0yMCA0OC03IDMxLTQgNTYtMTYgNzItMzAiIHN0cm9rZT0iI0YwNEQ0RSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8ZWxsaXBzZSBjeD0iMjcwIiBjeT0iMzg4IiByeD0iMjUiIHJ5PSIxMCIgZmlsbD0iI0YwNEQ0RSIgdHJhbnNmb3JtPSJyb3RhdGUoLTYgMjcwIDM4OCkiLz4KICA8Y2lyY2xlIGN4PSIyMjQiIGN5PSIzODMiIHI9IjYiIGZpbGw9IiNFQkE2RDIiLz48Y2lyY2xlIGN4PSIyOTgiIGN5PSIzNjEiIHI9IjQiIGZpbGw9IiNFQkE2RDIiLz48Y2lyY2xlIGN4PSIyNDEiIGN5PSI0MTIiIHI9IjMiIGZpbGw9IiNFQkE2RDIiLz48Y2lyY2xlIGN4PSIzMTkiIGN5PSIzNDciIHI9IjIuNSIgZmlsbD0iI0VCQTZEMiIvPjxjaXJjbGUgY3g9IjMxMCIgY3k9IjQwNyIgcj0iNCIgZmlsbD0iI0VCQTZEMiIvPgo8L3N2Zz4K" alt="Time to Cook app logo">
         <div class="scan-frame"><span></span><strong>Ready for safe cooking</strong></div>
       </div>
     </section>
@@ -330,6 +375,17 @@ footer { text-align: center; padding: 36px 18px 50px; }
         </fieldset>
         <label class="allergy-field" for="allergies">Do you have any food allergies?</label>
         <input id="allergies" name="allergies" type="text" placeholder="e.g., peanuts, milk, eggs, none">
+        <label class="allergy-field" for="kid-age">How old is the cook?</label>
+        <input id="kid-age" name="kid-age" type="text" inputmode="numeric" placeholder="e.g., 8">
+        <label class="allergy-field" for="skill-level">Cooking skill level</label>
+        <select id="skill-level" name="skill-level">
+          <option value="beginner" selected>Beginner</option>
+          <option value="some-practice">Some practice</option>
+          <option value="confident-with-adult">Confident with adult nearby</option>
+        </select>
+        <label class="allergy-field" for="time-available">How much time do you have?</label>
+        <input id="time-available" name="time-available" type="text" placeholder="e.g., 15 minutes">
+
         <p class="safety-banner">Always check ingredients with an adult if you have allergies. This prototype cannot guarantee allergen safety.</p>
         <div class="button-row">
           <button class="button secondary" type="button" data-go="welcome">Back</button>
@@ -341,7 +397,7 @@ footer { text-align: center; padding: 36px 18px 50px; }
     <section id="ingredients" class="screen card" data-screen="input">
       <p class="eyebrow">Step 2</p>
       <h2>What ingredients do you have?</h2>
-      <p class="lede">Upload or select a food photo. Prototype mode: ingredient detection is simulated.</p>
+      <p class="lede">Upload or select a food photo. With an API backend configured, OpenAI Vision will suggest possible ingredients for you to confirm.</p>
       <label class="upload-box" for="food-photo">
         <input id="food-photo" type="file" accept="image/*" capture="environment">
         <span class="upload-icon">📷</span>
@@ -352,7 +408,7 @@ footer { text-align: center; padding: 36px 18px 50px; }
         <img id="preview" alt="Uploaded food preview">
         <button class="button secondary" id="remove-photo" type="button">Remove photo</button>
       </div>
-      <p class="prototype-note">Prototype mode: ingredient detection is simulated. You can still use the demo chips below if you do not upload a photo.</p>
+      <p class="prototype-note">OpenAI Vision suggestions are not final. Please confirm, rename, add, or remove ingredients before recipes. AI can help identify foods, but it cannot guarantee allergen safety.</p>
       <button class="button primary wide" id="analyze-ingredients" type="button">Analyze Ingredients</button>
       <div class="button-row">
         <button class="button secondary" type="button" data-go="safety">Back</button>
@@ -362,7 +418,7 @@ footer { text-align: center; padding: 36px 18px 50px; }
     <section id="review" class="screen card" data-screen="review">
       <p class="eyebrow">Step 3</p>
       <h2>Review your ingredients</h2>
-      <p>You can edit the ingredient list before choosing a recipe. Check this list with an adult, especially if you have allergies.</p>
+      <p>You can edit, remove, or rename every detected ingredient before choosing a recipe. Check this list with an adult, especially if you have allergies or any confidence is low.</p>
       <div id="analysis-warnings" class="warning-list" aria-live="polite"></div>
       <h3>Detected ingredients</h3>
       <div class="selected-list" id="selected-ingredients" aria-live="polite"></div>
@@ -378,7 +434,7 @@ footer { text-align: center; padding: 36px 18px 50px; }
       <div class="chip-panel" id="suggested-ingredients" aria-label="Suggested ingredients"></div>
       <div class="button-row">
         <button class="button secondary" type="button" data-go="input">Back</button>
-        <button class="button primary" id="find-recipes" type="button">Find Recipes</button>
+        <button class="button primary" id="find-recipes" type="button">Confirm Ingredients & Find Recipes</button>
       </div>
     </section>
 
@@ -386,7 +442,7 @@ footer { text-align: center; padding: 36px 18px 50px; }
       <div class="section-heading">
         <p class="eyebrow">Step 4</p>
         <h2>Recipe suggestions</h2>
-        <p>Recipes are ranked from your ingredients and safety answers. Ask an adult before using heat, knives, or boiling water.</p>
+        <p>Recipe options use your confirmed ingredients, allergies, appliances, adult supervision, skill level, and time available. Ask an adult before using heat, knives, or boiling water.</p>
       </div>
       <div class="recipe-grid" id="recipe-results"></div>
       <div class="button-row">
@@ -404,7 +460,8 @@ footer { text-align: center; padding: 36px 18px 50px; }
 
     <section id="cooking" class="screen card cooking-mode" data-screen="cooking">
       <p class="eyebrow" id="step-progress">Step 1 of 1</p>
-      <h2 id="cooking-title">Cooking mode</h2>
+      <h2 id="cooking-title">Video-style cooking steps</h2>
+      <p class="small-note">This is a guided cooking mode, not real generated video.</p>
       <div class="video-screen" id="step-card" aria-live="polite"></div>
       <div class="button-row">
         <button class="button secondary" id="back-step" type="button">Back</button>
@@ -430,65 +487,281 @@ footer { text-align: center; padding: 36px 18px 50px; }
   </footer>
 
   <script>
+    window.TimeToCookConfig = {
+      // Deployed Time to Cook backend. Leave API keys on the server only.
+      API_BASE_URL: "https://project-7vqye.vercel.app",
+      // Use "/api" for Vercel/Cloudflare-style routing or "/.netlify/functions" for Netlify.
+      API_PATH_PREFIX: "/api"
+    };
+  </script>
+  <script>
 /**
- * Mock/backend-ready ingredient analysis service for Time to Cook.
+ * OpenAI-powered, backend-ready service layer for Time to Cook.
  *
- * Expected future endpoint:
- *   POST /api/analyze-ingredients
- *   multipart/form-data: { image: File }
+ * Expected backend endpoints:
+ *   POST /api/analyze-ingredients  multipart/form-data: { image: File, safetySettings: JSON string }
+ *   POST /api/suggest-recipes      JSON: { ingredients, safetySettings }
+ *   POST /api/generate-recipe      JSON: { recipeOption, ingredients, safetySettings }
  *
- * API keys and AI model calls must stay on the backend. The frontend should only
- * send the image to the server and receive safe structured JSON like the shapes
- * documented below.
- *
- * @typedef {Object} Ingredient
- * @property {string} id
- * @property {string} name
- * @property {string} category
- * @property {number=} confidence
- *
- * @typedef {Object} IngredientAnalysisResult
- * @property {Ingredient[]} detectedIngredients
- * @property {string[]} warnings
- * @property {string[]} suggestedRecipes
+ * API keys must stay on the backend. The frontend sends photos, confirmed
+ * ingredients, and safety settings to a serverless backend only when
+ * window.TimeToCookConfig.API_BASE_URL is configured. Otherwise it uses mock
+ * data so GitHub Pages still works as a safe prototype.
  */
 
 const mockDetectedIngredients = [
-  { id: "pasta", name: "pasta", category: "grain", confidence: 0.92 },
-  { id: "cheese", name: "cheese", category: "dairy", confidence: 0.89 },
-  { id: "milk", name: "milk", category: "dairy", confidence: 0.83 },
-  { id: "butter", name: "butter", category: "dairy", confidence: 0.78 }
+  { id: "pasta", name: "pasta", confidence: 0.72, confidenceLevel: "medium", adultHelpRequired: true, allergyConcern: "wheat/gluten", notes: "Confirm the box label with an adult." },
+  { id: "cheese", name: "cheese", confidence: 0.7, confidenceLevel: "medium", adultHelpRequired: false, allergyConcern: "milk/dairy", notes: "Check dairy allergies with an adult." },
+  { id: "milk", name: "milk", confidence: 0.66, confidenceLevel: "medium", adultHelpRequired: false, allergyConcern: "milk/dairy", notes: "Confirm the container with an adult." },
+  { id: "butter", name: "butter", confidence: 0.61, confidenceLevel: "low", adultHelpRequired: false, allergyConcern: "milk/dairy", notes: "Low-confidence demo item; please confirm manually." }
 ];
 
-/**
- * Analyze an ingredient image.
- *
- * Prototype mode returns mock data so the full app can be tested without a
- * backend. Replace the timeout block with a fetch('/api/analyze-ingredients')
- * call when the backend is ready.
- *
- * @param {File|null} imageFile
- * @returns {Promise<IngredientAnalysisResult>}
- */
-async function analyzeIngredientImage(imageFile) {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+const sessionCache = {
+  ingredientAnalyses: new Map(),
+  recipeSuggestions: new Map(),
+  generatedRecipes: new Map()
+};
 
+const mockRecipeOptions = [
+  { id: "mac-and-cheese", title: "Mac and Cheese", difficulty: "Medium", estimatedTime: "20 min", requiredTools: ["stove", "pot", "strainer", "spoon"], adultHelpRequired: true, adultHelpWarnings: ["Needs adult help for boiling water and draining pasta."], safetyNotes: ["Uses heat and boiling water."], fitReason: "Uses pasta, cheese, milk, and butter.", ingredientsUsed: ["pasta", "cheese", "milk", "butter"], missingIngredients: [], source: "Mock fallback" },
+  { id: "cheese-sandwich", title: "Cheese Sandwich", difficulty: "Easy", estimatedTime: "10 min", requiredTools: ["plate", "butter knife"], adultHelpRequired: false, adultHelpWarnings: ["Ask before using even a butter knife."], safetyNotes: ["Check dairy and wheat allergies."], fitReason: "Uses cheese and simple pantry items.", ingredientsUsed: ["cheese"], missingIngredients: ["bread"], source: "Mock fallback" },
+  { id: "fruit-smoothie", title: "Fruit Smoothie", difficulty: "Easy", estimatedTime: "8 min", requiredTools: ["blender", "cup"], adultHelpRequired: true, adultHelpWarnings: ["Ask an adult before using a blender."], safetyNotes: ["Blender blades are sharp; check dairy allergies."], fitReason: "Good no-stove option if fruit and yogurt are available.", ingredientsUsed: ["milk"], missingIngredients: ["banana", "berries", "yogurt"], source: "Mock fallback" }
+];
+
+function getApiBaseUrl() {
+  const configValue = window.TimeToCookConfig && window.TimeToCookConfig.API_BASE_URL;
+  const localOverride = window.localStorage && window.localStorage.getItem("timeToCookApiBaseUrl");
+  return (configValue || localOverride || "").trim().replace(/\/$/, "");
+}
+
+function getApiPathPrefix() {
+  const configValue = window.TimeToCookConfig && window.TimeToCookConfig.API_PATH_PREFIX;
+  return (configValue || "/api").trim().replace(/\/$/, "");
+}
+
+function stableJson(value) {
+  return JSON.stringify(value, Object.keys(value || {}).sort());
+}
+
+function fileCacheKey(imageFile, safetySettings) {
+  const filePart = imageFile ? `${imageFile.name}:${imageFile.size}:${imageFile.lastModified || 0}` : "no-photo";
+  return `${filePart}:${stableJson(safetySettings)}`;
+}
+
+function recipeCacheKey(ingredients, safetySettings) {
+  return `${ingredients.slice().sort().join("|")}:${stableJson(safetySettings)}`;
+}
+
+function fullRecipeCacheKey(recipeOption, ingredients, safetySettings) {
+  return `${recipeOption && recipeOption.id ? recipeOption.id : recipeOption && recipeOption.title}:${recipeCacheKey(ingredients, safetySettings)}`;
+}
+
+function resizeImageForAnalysis(imageFile, maxSide = 1024, quality = 0.72) {
+  if (!imageFile || !imageFile.type || !imageFile.type.startsWith("image/")) return Promise.resolve(imageFile);
+
+  return new Promise((resolve) => {
+    const image = new Image();
+    const url = URL.createObjectURL(imageFile);
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+      if (scale >= 1 && imageFile.size < 750000) return resolve(imageFile);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+      const context = canvas.getContext("2d");
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        if (!blob) return resolve(imageFile);
+        resolve(new File([blob], imageFile.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg", lastModified: imageFile.lastModified || Date.now() }));
+      }, "image/jpeg", quality);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(imageFile);
+    };
+    image.src = url;
+  });
+}
+
+function baseWarnings(extraWarning) {
+  return [
+    "AI can help identify foods, but it cannot guarantee allergen safety.",
+    "Always check ingredients with an adult if you have allergies.",
+    "Ask an adult before using heat, knives, appliances, or boiling water.",
+    ...(extraWarning ? [extraWarning] : [])
+  ];
+}
+
+function mockIngredientAnalysis(imageFile, extraWarning) {
   return {
     detectedIngredients: mockDetectedIngredients,
-    warnings: [
-      "Prototype mode: ingredient detection is simulated.",
-      imageFile ? `Demo analysis used the uploaded file name: ${imageFile.name}` : "No photo was required for this demo analysis."
-    ],
-    suggestedRecipes: ["mac-and-cheese", "cheese-sandwich", "fruit-smoothie"]
+    warnings: baseWarnings(extraWarning || (imageFile ? `Mock fallback used for ${imageFile.name}.` : "Mock fallback used because no API backend is configured.")),
+    needsManualConfirmation: true,
+    providerInfo: {
+      mode: "mock",
+      ingredientProvider: "mock fallback",
+      model: "none"
+    }
   };
+}
+
+function mockRecipeSuggestionResult(extraWarning) {
+  return {
+    suggestedRecipes: mockRecipeOptions,
+    warnings: baseWarnings(extraWarning || "Mock recipe suggestions used because no API backend is configured."),
+    providerInfo: {
+      mode: "mock",
+      recipeProvider: "mock fallback",
+      model: "none"
+    }
+  };
+}
+
+function mockFullRecipe(recipeOption = {}, extraWarning) {
+  const option = recipeOption.id ? recipeOption : mockRecipeOptions[0];
+  return {
+    recipe: {
+      id: option.id,
+      title: option.title,
+      ingredients: option.ingredientsUsed?.length ? option.ingredientsUsed : ["pasta", "cheese", "milk", "butter"],
+      tools: option.requiredTools?.length ? option.requiredTools : ["stove", "pot", "strainer", "spoon"],
+      estimatedTime: option.estimatedTime || "20 min",
+      difficulty: option.difficulty || "Medium",
+      adultHelpRequired: option.adultHelpRequired !== false,
+      adultHelpWarnings: option.adultHelpWarnings?.length ? option.adultHelpWarnings : ["Ask an adult to review this recipe."],
+      safetyNotes: option.safetyNotes?.length ? option.safetyNotes : baseWarnings(),
+      source: option.source || "Mock fallback",
+      fitReason: option.fitReason || "Uses your confirmed ingredients.",
+      steps: [
+        { id: "step-1", instruction: "Ask an adult to review the recipe and ingredients.", safetyNote: "An adult must check allergies and tools before cooking.", emoji: "👀", videoSearchPhrase: "kid safe cooking adult supervision" },
+        { id: "step-2", instruction: "Wash your hands and clean your cooking space.", safetyNote: "Clean hands help keep food safe.", emoji: "🧼", videoSearchPhrase: "how kids wash hands before cooking" },
+        { id: "step-3", instruction: "Gather your ingredients and tools.", safetyNote: "Ask for help with heavy, sharp, or hot tools.", emoji: "🥣", videoSearchPhrase: "kids gather cooking ingredients safely" },
+        { id: "step-4", instruction: `Make ${option.title} one adult-approved step at a time.`, safetyNote: "Pause and ask for help with heat, knives, appliances, or boiling water.", emoji: "▶️", videoSearchPhrase: `safe ${option.title} cooking steps for kids` },
+        { id: "step-5", instruction: "Enjoy when an adult says the food is ready.", safetyNote: "Let hot food cool before tasting.", emoji: "🎉", videoSearchPhrase: "how to taste hot food safely" }
+      ]
+    },
+    warnings: baseWarnings(extraWarning || "Mock full recipe used because no API backend is configured."),
+    providerInfo: {
+      mode: "mock",
+      recipeProvider: "mock fallback",
+      model: "none"
+    }
+  };
+}
+
+async function postJson(apiBaseUrl, path, payload) {
+  const response = await fetch(`${apiBaseUrl}${getApiPathPrefix()}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  if (!response.ok) throw new Error(`${path} returned ${response.status}`);
+  return response.json();
+}
+
+async function analyzeIngredientImage(imageFile, safetySettings = {}) {
+  const apiBaseUrl = getApiBaseUrl();
+  const cacheKey = fileCacheKey(imageFile, safetySettings);
+  if (sessionCache.ingredientAnalyses.has(cacheKey)) return sessionCache.ingredientAnalyses.get(cacheKey);
+  if (!apiBaseUrl) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const result = mockIngredientAnalysis(imageFile);
+    sessionCache.ingredientAnalyses.set(cacheKey, result);
+    return result;
+  }
+
+  try {
+    const formData = new FormData();
+    const resizedImage = await resizeImageForAnalysis(imageFile);
+    if (resizedImage) formData.append("image", resizedImage);
+    formData.append("safetySettings", JSON.stringify(safetySettings));
+    const response = await fetch(`${apiBaseUrl}${getApiPathPrefix()}/analyze-ingredients`, { method: "POST", body: formData });
+    if (!response.ok) throw new Error(`Ingredient API returned ${response.status}`);
+    const result = await response.json();
+    const normalizedResult = {
+      detectedIngredients: Array.isArray(result.detectedIngredients) ? result.detectedIngredients : [],
+      warnings: Array.isArray(result.warnings) ? result.warnings : [],
+      needsManualConfirmation: Boolean(result.needsManualConfirmation),
+      providerInfo: result.providerInfo || { mode: "openai" }
+    };
+    sessionCache.ingredientAnalyses.set(cacheKey, normalizedResult);
+    return normalizedResult;
+  } catch (error) {
+    console.warn("OpenAI ingredient API failed; using mock fallback.", error);
+    const result = mockIngredientAnalysis(imageFile, "The OpenAI ingredient API was unavailable, so Time to Cook used mock demo ingredients instead.");
+    sessionCache.ingredientAnalyses.set(cacheKey, result);
+    return result;
+  }
+}
+
+async function suggestKidFriendlyRecipes(ingredients, safetySettings = {}) {
+  const apiBaseUrl = getApiBaseUrl();
+  const cacheKey = recipeCacheKey(ingredients, safetySettings);
+  if (sessionCache.recipeSuggestions.has(cacheKey)) return sessionCache.recipeSuggestions.get(cacheKey);
+  if (!apiBaseUrl) {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    const result = mockRecipeSuggestionResult();
+    sessionCache.recipeSuggestions.set(cacheKey, result);
+    return result;
+  }
+
+  try {
+    const result = await postJson(apiBaseUrl, "/suggest-recipes", { ingredients, safetySettings });
+    const normalizedResult = {
+      suggestedRecipes: Array.isArray(result.suggestedRecipes) ? result.suggestedRecipes : [],
+      warnings: Array.isArray(result.warnings) ? result.warnings : [],
+      providerInfo: result.providerInfo || { mode: "openai" }
+    };
+    sessionCache.recipeSuggestions.set(cacheKey, normalizedResult);
+    return normalizedResult;
+  } catch (error) {
+    console.warn("OpenAI recipe suggestion API failed; using mock fallback.", error);
+    const result = mockRecipeSuggestionResult("The OpenAI recipe API was unavailable, so Time to Cook used mock recipe suggestions instead.");
+    sessionCache.recipeSuggestions.set(cacheKey, result);
+    return result;
+  }
+}
+
+async function generateFullRecipe(recipeOption, ingredients, safetySettings = {}) {
+  const apiBaseUrl = getApiBaseUrl();
+  const cacheKey = fullRecipeCacheKey(recipeOption, ingredients, safetySettings);
+  if (sessionCache.generatedRecipes.has(cacheKey)) return sessionCache.generatedRecipes.get(cacheKey);
+  if (!apiBaseUrl) {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    const result = mockFullRecipe(recipeOption);
+    sessionCache.generatedRecipes.set(cacheKey, result);
+    return result;
+  }
+
+  try {
+    const result = await postJson(apiBaseUrl, "/generate-recipe", { recipeOption, ingredients, safetySettings });
+    const normalizedResult = {
+      recipe: result.recipe,
+      warnings: Array.isArray(result.warnings) ? result.warnings : [],
+      providerInfo: result.providerInfo || { mode: "openai" }
+    };
+    sessionCache.generatedRecipes.set(cacheKey, normalizedResult);
+    return normalizedResult;
+  } catch (error) {
+    console.warn("OpenAI full recipe API failed; using mock fallback.", error);
+    const result = mockFullRecipe(recipeOption, "The OpenAI full recipe API was unavailable, so Time to Cook used a mock guided recipe instead.");
+    sessionCache.generatedRecipes.set(cacheKey, result);
+    return result;
+  }
 }
 
 window.TimeToCookServices = {
   analyzeIngredientImage,
-  mockDetectedIngredients
+  suggestKidFriendlyRecipes,
+  generateFullRecipe,
+  mockDetectedIngredients,
+  mockRecipeOptions
 };
 
-
+  </script>
+  <script>
 /**
  * Time to Cook front-end prototype.
  *
@@ -521,7 +794,19 @@ window.TimeToCookServices = {
  * @property {CookingStep[]} steps
  */
 
-const analysisService = window.TimeToCookServices.analyzeIngredientImage;
+const timeToCookServices = window.TimeToCookServices;
+const analysisService = timeToCookServices.analyzeIngredientImage;
+const recipeSuggestionService = timeToCookServices.suggestKidFriendlyRecipes;
+const fullRecipeService = timeToCookServices.generateFullRecipe;
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 const demoIngredients = [
   "pasta", "cheese", "milk", "butter", "bread", "apple", "banana", "berries",
@@ -600,13 +885,20 @@ const state = {
   currentScreen: "welcome",
   imageFile: null,
   selectedIngredients: new Set(),
-  analysisWarnings: ["Prototype mode: ingredient detection is simulated."],
+  detectedIngredientDetails: new Map(),
+  analysisWarnings: ["OpenAI Vision can identify possible foods, but you must confirm them before recipes."],
+  providerInfo: { mode: "mock" },
+  apiRecipeSuggestions: [],
+  recipeWarnings: [],
   safety: {
     stove: false,
     microwave: false,
     knife: false,
     adultNearby: true,
-    allergies: ""
+    allergies: "",
+    kidAge: "",
+    skillLevel: "beginner",
+    timeAvailable: "20 minutes"
   },
   activeRecipe: null,
   stepIndex: 0,
@@ -640,18 +932,46 @@ function collectSafetySetup() {
     microwave: data.get("microwave") === "yes",
     knife: data.get("knife") === "yes",
     adultNearby: data.get("adult") === "yes",
-    allergies: normalize(data.get("allergies") || "")
+    allergies: normalize(data.get("allergies") || ""),
+    kidAge: String(data.get("kid-age") || "").trim(),
+    skillLevel: String(data.get("skill-level") || "beginner"),
+    timeAvailable: String(data.get("time-available") || "20 minutes").trim()
   };
 }
 
+function upsertIngredient(ingredient, details = {}) {
+  const name = normalize(ingredient);
+  if (!name) return;
+  state.selectedIngredients.add(name);
+  state.detectedIngredientDetails.set(name, { name, ...details });
+}
+
 function toggleIngredient(ingredient) {
-  if (state.selectedIngredients.has(ingredient)) state.selectedIngredients.delete(ingredient);
-  else state.selectedIngredients.add(ingredient);
+  const name = normalize(ingredient);
+  if (state.selectedIngredients.has(name)) {
+    state.selectedIngredients.delete(name);
+    state.detectedIngredientDetails.delete(name);
+  } else {
+    upsertIngredient(name, { confidenceLevel: "manual", notes: "Added from demo chips." });
+  }
   renderIngredients();
 }
 
 function removeIngredient(ingredient) {
-  state.selectedIngredients.delete(ingredient);
+  const name = normalize(ingredient);
+  state.selectedIngredients.delete(name);
+  state.detectedIngredientDetails.delete(name);
+  renderIngredients();
+}
+
+function renameIngredient(oldIngredient, newIngredient) {
+  const oldName = normalize(oldIngredient);
+  const newName = normalize(newIngredient);
+  if (!oldName || !newName || oldName === newName) return renderIngredients();
+  const details = state.detectedIngredientDetails.get(oldName) || {};
+  state.selectedIngredients.delete(oldName);
+  state.detectedIngredientDetails.delete(oldName);
+  upsertIngredient(newName, { ...details, name: newName, notes: details.notes || "Renamed by user during confirmation." });
   renderIngredients();
 }
 
@@ -661,25 +981,107 @@ function renderIngredients() {
   `).join("");
 
   selectedPanel.innerHTML = state.selectedIngredients.size
-    ? [...state.selectedIngredients].map((ingredient) => `<button class="chip selected-chip" type="button" data-remove="${ingredient}" aria-label="Remove ${ingredient}">${ingredient}</button>`).join("")
+    ? [...state.selectedIngredients].map((ingredient) => {
+        const details = state.detectedIngredientDetails.get(ingredient) || {};
+        const confidence = details.confidenceLevel || (details.confidence ? `${Math.round(Number(details.confidence) * 100)}%` : "manual");
+        const allergyConcern = details.allergyConcern || details.possibleAllergyConcern;
+        const adultHelpRequired = details.adultHelpRequired || details.adultHelpLikely;
+        const allergy = allergyConcern ? `<small>Allergy check: ${escapeHtml(allergyConcern)}</small>` : "";
+        const adult = adultHelpRequired ? `<small>Adult help may be needed.</small>` : "";
+        return `<div class="ingredient-card">
+          <label>Ingredient
+            <input type="text" value="${escapeHtml(ingredient)}" data-rename-from="${escapeHtml(ingredient)}" aria-label="Rename ${escapeHtml(ingredient)}">
+          </label>
+          <span class="confidence-pill">${escapeHtml(confidence)}</span>
+          ${allergy}${adult}
+          ${details.notes ? `<small>${escapeHtml(details.notes)}</small>` : ""}
+          <button class="chip selected-chip" type="button" data-remove="${escapeHtml(ingredient)}" aria-label="Remove ${escapeHtml(ingredient)}">Remove</button>
+        </div>`;
+      }).join("")
     : `<p>No ingredients yet. Analyze a photo, tap demo chips, or add your own.</p>`;
 
-  document.querySelector("#analysis-warnings").innerHTML = state.analysisWarnings
-    .map((warning) => `<p>⚠️ ${warning}</p>`)
+  const providerText = state.providerInfo
+    ? `<p>ℹ️ Mode: ${escapeHtml(state.providerInfo.mode || "mock")} · Ingredients: ${escapeHtml(state.providerInfo.ingredientProvider || "demo")} · Recipes: ${escapeHtml(state.providerInfo.recipeProvider || "local")}</p>`
+    : "";
+  document.querySelector("#analysis-warnings").innerHTML = providerText + state.analysisWarnings
+    .map((warning) => `<p>⚠️ ${escapeHtml(warning)}</p>`)
     .join("");
 }
 
-async function runMockAnalysis() {
+function makeExternalRecipe(suggestion) {
+  const ingredients = Array.isArray(suggestion.ingredients) && suggestion.ingredients.length
+    ? suggestion.ingredients.map((item) => normalize(String(item)))
+    : (Array.isArray(suggestion.ingredientsUsed) && suggestion.ingredientsUsed.length ? suggestion.ingredientsUsed.map((item) => normalize(String(item))) : [...state.selectedIngredients].slice(0, 6));
+  const safetyNotes = Array.isArray(suggestion.safetyNotes) && suggestion.safetyNotes.length
+    ? [...(suggestion.safetyNotes || []), ...(suggestion.adultHelpWarnings || [])]
+    : ["Recipe came from OpenAI or fallback data. Ask an adult to review every ingredient and step."];
+  const steps = Array.isArray(suggestion.steps) && suggestion.steps.length
+    ? suggestion.steps.map((step, index) => ({
+        id: step.id || `${suggestion.id || "api-recipe"}-step-${index + 1}`,
+        instruction: step.instruction || String(step),
+        safetyNote: step.safetyNote || (index === 0 ? "Ask an adult to review this recipe before cooking." : ""),
+        emoji: step.emoji || "▶️",
+        videoSearchPhrase: step.videoSearchPhrase || ""
+      }))
+    : [
+        { id: `${suggestion.id}-review`, instruction: "Ask an adult to review the recipe and ingredients.", safetyNote: "AI can help find recipes, but an adult must check safety and allergies.", emoji: "👀" },
+        { id: `${suggestion.id}-gather`, instruction: "Gather the ingredients and tools on a clean counter.", safetyNote: "Wash hands before touching food.", emoji: "🧼" },
+        { id: `${suggestion.id}-cook`, instruction: `Make ${suggestion.title} by following the adult-approved recipe directions.`, safetyNote: "Ask for help with heat, knives, appliances, or anything confusing.", emoji: "🍽️" },
+        { id: `${suggestion.id}-enjoy`, instruction: "Taste your food when an adult says it is ready.", emoji: "🎉" }
+      ];
+
+  return {
+    id: suggestion.id || `api-${normalize(suggestion.title).replace(/[^a-z0-9]+/g, "-")}`,
+    title: suggestion.title || "Recipe idea",
+    emoji: suggestion.emoji || "🍽️",
+    ingredients,
+    tools: Array.isArray(suggestion.requiredTools) ? suggestion.requiredTools : (Array.isArray(suggestion.tools) ? suggestion.tools : ["adult helper"]),
+    estimatedTime: suggestion.estimatedTime || "Ask an adult",
+    difficulty: suggestion.difficulty || "Review first",
+    adultHelpRequired: suggestion.adultHelpRequired !== false,
+    safetyNotes,
+    adultHelpWarnings: suggestion.adultHelpWarnings || [],
+    fitReason: suggestion.fitReason || "",
+    steps,
+    source: suggestion.source || "OpenAI",
+    sourceUrl: suggestion.sourceUrl || ""
+  };
+}
+
+function getRecipeCatalog() {
+  const externalRecipes = state.apiRecipeSuggestions
+    .filter((suggestion) => suggestion && typeof suggestion === "object")
+    .map(makeExternalRecipe);
+  return externalRecipes.length ? externalRecipes : recipes;
+}
+
+function getStepEmoji(recipe, step) {
+  if (step.emoji) return step.emoji;
+  const text = `${step.instruction} ${step.safetyNote || ""}`.toLowerCase();
+  if (text.includes("boil") || text.includes("hot") || text.includes("stove") || text.includes("heat")) return "🔥";
+  if (text.includes("knife") || text.includes("cut") || text.includes("blade")) return "🔪";
+  if (text.includes("wash")) return "🧼";
+  if (text.includes("adult") || text.includes("help")) return "🙋";
+  return recipe.emoji || "▶️";
+}
+
+async function runIngredientAnalysis() {
   const button = document.querySelector("#analyze-ingredients");
   button.textContent = "Analyzing...";
   button.disabled = true;
 
-  const result = await analysisService(state.imageFile);
-  result.detectedIngredients.forEach((ingredient) => state.selectedIngredients.add(ingredient.name));
+  const result = await analysisService(state.imageFile, state.safety);
+  state.selectedIngredients.clear();
+  state.detectedIngredientDetails.clear();
+  (result.detectedIngredients || []).forEach((ingredient) => upsertIngredient(ingredient.name, ingredient));
+  state.apiRecipeSuggestions = [];
+  state.providerInfo = result.providerInfo || { mode: "mock" };
   state.analysisWarnings = [
     ...result.warnings,
     "You can edit the ingredient list before choosing a recipe.",
-    "Always check ingredients with an adult if you have allergies."
+    "Always check ingredients with an adult if you have allergies.",
+    "AI can help identify foods, but it cannot guarantee allergen safety.",
+    result.needsManualConfirmation ? "Some items may be low confidence. Please rename, remove, or add ingredients before finding recipes." : "Please confirm this list before finding recipes."
   ];
 
   button.textContent = "Analyze Ingredients";
@@ -704,7 +1106,10 @@ function getRecipeSafety(recipe) {
     notes.push("An adult is not nearby. Pick a no-heat recipe or wait for help.");
   }
   if (state.safety.allergies) {
-    notes.push(`Allergy reminder: you entered “${state.safety.allergies}.” An adult must check every ingredient label. This prototype cannot guarantee allergen safety.`);
+    notes.push(`Allergy reminder: you entered “${state.safety.allergies}.” An adult must check every ingredient label. AI cannot guarantee allergen safety.`);
+  }
+  if (state.safety.skillLevel === "beginner") {
+    notes.push("Beginner setting: choose simple recipes and ask an adult before starting.");
   }
 
   return { needsAdult, notes: [...new Set(notes)] };
@@ -717,40 +1122,50 @@ function scoreRecipe(recipe) {
     recipe,
     matches,
     missingIngredients,
-    score: matches.length / recipe.ingredients.length
+    score: matches.length / (recipe.ingredients.length || 1)
   };
 }
 
 function renderRecipes() {
-  const ranked = recipes
+  const ranked = getRecipeCatalog()
     .map(scoreRecipe)
     .sort((a, b) => b.matches.length - a.matches.length || a.missingIngredients.length - b.missingIngredients.length);
 
-  recipeResults.innerHTML = ranked.map(({ recipe, matches, missingIngredients }) => {
+  const warningHtml = state.recipeWarnings.length
+    ? `<div class="warning-list">${state.recipeWarnings.map((warning) => `<p>⚠️ ${escapeHtml(warning)}</p>`).join("")}</div>`
+    : "";
+
+  recipeResults.innerHTML = warningHtml + ranked.map(({ recipe, matches, missingIngredients }) => {
     const safety = getRecipeSafety(recipe);
     const safetyLabel = safety.needsAdult ? "Needs adult help" : "Kid-friendly with adult check";
     return `
       <article class="recipe-card">
         <div class="recipe-art" aria-hidden="true">${recipe.emoji}</div>
         <div>
-          <h3>${recipe.title}</h3>
-          <p>${matches.length} matching ingredient${matches.length === 1 ? "" : "s"}. ${missingIngredients.length ? `Missing: ${missingIngredients.join(", ")}.` : "You have all listed ingredients."}</p>
+          <h3>${escapeHtml(recipe.title)}</h3>
+          <p>${recipe.fitReason ? escapeHtml(recipe.fitReason) : `${matches.length} matching ingredient${matches.length === 1 ? "" : "s"}. ${missingIngredients.length ? `Missing: ${missingIngredients.map(escapeHtml).join(", ")}.` : "You have all listed ingredients."}`}</p>
         </div>
         <div class="recipe-meta">
-          <span>⏱ ${recipe.estimatedTime}</span>
-          <span>⭐ ${recipe.difficulty}</span>
-          <span>🧰 ${recipe.tools.join(", ")}</span>
+          <span>⏱ ${escapeHtml(recipe.estimatedTime)}</span>
+          <span>⭐ ${escapeHtml(recipe.difficulty)}</span>
+          <span>🧰 ${recipe.tools.map(escapeHtml).join(", ")}</span>
         </div>
         <p class="safety-label ${safety.needsAdult ? "adult" : "ok"}">${safetyLabel}</p>
-        <ul>${safety.notes.slice(0, 3).map((note) => `<li>${note}</li>`).join("")}</ul>
-        <button class="button primary" type="button" data-pick="${recipe.id}">Pick This</button>
+        <ul>${safety.notes.slice(0, 3).map((note) => `<li>${escapeHtml(note)}</li>`).join("")}</ul>
+        <button class="button primary" type="button" data-pick="${escapeHtml(recipe.id)}">Pick This</button>
       </article>
     `;
   }).join("");
 }
 
-function setActiveRecipe(recipeId) {
-  state.activeRecipe = recipes.find((recipe) => recipe.id === recipeId);
+async function setActiveRecipe(recipeId) {
+  const option = getRecipeCatalog().find((recipe) => recipe.id === recipeId);
+  if (!option) return;
+  const result = await fullRecipeService(option, [...state.selectedIngredients], state.safety);
+  const generatedRecipe = result.recipe ? makeExternalRecipe(result.recipe) : option;
+  state.activeRecipe = { ...option, ...generatedRecipe, fitReason: option.fitReason || generatedRecipe.fitReason || "Uses your confirmed ingredients and safety setup.", source: result.recipe?.source || option.source || "OpenAI" };
+  state.analysisWarnings = [...(result.warnings || [])];
+  state.providerInfo = result.providerInfo || state.providerInfo;
   state.stepIndex = 0;
   renderRecipeDetail();
   showScreen("detail");
@@ -762,17 +1177,20 @@ function renderRecipeDetail() {
   const safety = getRecipeSafety(recipe);
   document.querySelector("#recipe-detail-content").innerHTML = `
     <p class="eyebrow">Recipe detail</p>
-    <h2>${recipe.emoji} ${recipe.title}</h2>
+    <h2>${recipe.emoji} ${escapeHtml(recipe.title)}</h2>
     <div class="detail-grid">
-      <div><strong>Time</strong><p>${recipe.estimatedTime}</p></div>
-      <div><strong>Difficulty</strong><p>${recipe.difficulty}</p></div>
-      <div><strong>Tools</strong><p>${recipe.tools.join(", ")}</p></div>
+      <div><strong>Time</strong><p>${escapeHtml(recipe.estimatedTime)}</p></div>
+      <div><strong>Difficulty</strong><p>${escapeHtml(recipe.difficulty)}</p></div>
+      <div><strong>Tools</strong><p>${recipe.tools.map(escapeHtml).join(", ")}</p></div>
     </div>
     <p class="safety-label ${safety.needsAdult ? "adult" : "ok"}">${safety.needsAdult ? "Adult help required" : "Adult check recommended"}</p>
     <h3>Ingredients</h3>
-    <ul>${recipe.ingredients.map((item) => `<li>${item}</li>`).join("")}</ul>
+    <ul>${recipe.ingredients.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+    ${recipe.fitReason ? `<h3>Why this fits</h3><p>${escapeHtml(recipe.fitReason)}</p>` : ""}
+    ${recipe.adultHelpWarnings && recipe.adultHelpWarnings.length ? `<h3>Adult-help warnings</h3><ul>${recipe.adultHelpWarnings.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}</ul>` : ""}
     <h3>Safety reminders</h3>
-    <ul>${safety.notes.map((note) => `<li>${note}</li>`).join("")}</ul>
+    <ul>${safety.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}</ul>
+    ${recipe.source ? `<p class="small-note">Source: ${escapeHtml(recipe.source)}${recipe.sourceUrl ? ` · <a href="${escapeHtml(recipe.sourceUrl)}" target="_blank" rel="noopener">adult recipe link</a>` : ""}</p>` : ""}
   `;
 }
 
@@ -783,9 +1201,11 @@ function renderCookingStep() {
   document.querySelector("#cooking-title").textContent = recipe.title;
   document.querySelector("#step-progress").textContent = `Step ${state.stepIndex + 1} of ${recipe.steps.length}`;
   document.querySelector("#step-card").innerHTML = `
-    <span>${recipe.emoji}</span>
-    <strong>${step.instruction}</strong>
-    ${step.safetyNote ? `<p class="step-safety">Safety: ${step.safetyNote}</p>` : ""}
+    <div class="play-badge">▶ Guided cooking mode</div>
+    <span>${getStepEmoji(recipe, step)}</span>
+    <strong>${escapeHtml(step.instruction)}</strong>
+    ${step.safetyNote ? `<p class="step-safety">Safety: ${escapeHtml(step.safetyNote)}</p>` : ""}
+    ${step.videoSearchPhrase ? `<p class="small-note">Optional search phrase: ${escapeHtml(step.videoSearchPhrase)}</p>` : ""}
   `;
   document.querySelector("#back-step").textContent = state.stepIndex === 0 ? "Recipe Detail" : "Back";
   document.querySelector("#next-step").textContent = state.stepIndex === recipe.steps.length - 1 ? "Finish" : "Next Step";
@@ -809,7 +1229,7 @@ document.querySelector("#safety-form").addEventListener("submit", (event) => {
   showScreen("input");
 });
 
-document.querySelector("#analyze-ingredients").addEventListener("click", runMockAnalysis);
+document.querySelector("#analyze-ingredients").addEventListener("click", runIngredientAnalysis);
 
 ingredientPanel.addEventListener("click", (event) => {
   const button = event.target.closest("[data-ingredient]");
@@ -821,24 +1241,43 @@ selectedPanel.addEventListener("click", (event) => {
   if (button) removeIngredient(button.dataset.remove);
 });
 
+selectedPanel.addEventListener("change", (event) => {
+  const input = event.target.closest("[data-rename-from]");
+  if (input) renameIngredient(input.dataset.renameFrom, input.value);
+});
+
 document.querySelector("#ingredient-form").addEventListener("submit", (event) => {
   event.preventDefault();
   const input = document.querySelector("#custom-ingredient");
   const ingredient = normalize(input.value);
   if (!ingredient) return;
-  state.selectedIngredients.add(ingredient);
+  upsertIngredient(ingredient, { confidenceLevel: "manual", notes: "Added manually during review." });
   input.value = "";
   renderIngredients();
 });
 
-document.querySelector("#find-recipes").addEventListener("click", () => {
+document.querySelector("#find-recipes").addEventListener("click", async () => {
+  const button = document.querySelector("#find-recipes");
+  button.textContent = "Finding Recipes...";
+  button.disabled = true;
+  const ingredients = [...state.selectedIngredients];
+  const result = await recipeSuggestionService(ingredients, state.safety);
+  state.apiRecipeSuggestions = result.suggestedRecipes || [];
+  state.recipeWarnings = result.warnings || [];
+  state.providerInfo = result.providerInfo || state.providerInfo;
+  button.textContent = "Confirm Ingredients & Find Recipes";
+  button.disabled = false;
   renderRecipes();
   showScreen("recipes");
 });
 
-recipeResults.addEventListener("click", (event) => {
+recipeResults.addEventListener("click", async (event) => {
   const button = event.target.closest("[data-pick]");
-  if (button) setActiveRecipe(button.dataset.pick);
+  if (!button) return;
+  button.textContent = "Building Recipe...";
+  button.disabled = true;
+  await setActiveRecipe(button.dataset.pick);
+  button.disabled = false;
 });
 
 document.querySelector("#start-cooking").addEventListener("click", () => {
@@ -896,7 +1335,6 @@ document.querySelector("#remove-photo").addEventListener("click", () => {
 });
 
 renderIngredients();
-renderRecipes();
 showScreen("welcome");
 
   </script>
